@@ -40,3 +40,8 @@ it("uses adult custom questions and supplies a safe fallback", () => {
     makeQuestion("spelling", "custom", freshState().settings, [], 0).answer,
   ).toBeTruthy();
 });
+it("does not mark an equally grammatical sight-word completion wrong", () => {
+  const q = makeQuestion("spelling", "sight", freshState().settings, [], 1);
+  expect(q.answer).toBe("my");
+  expect(q.choices).not.toContain("the");
+});

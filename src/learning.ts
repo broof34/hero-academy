@@ -238,7 +238,11 @@ export function makeQuestion(
       q.prompt = sight[1];
       choose(
         sight[0],
-        ["the", "my", "we", "is", "see"].filter((w) => w !== sight[0]),
+        ["the", "my", "we", "is", "see"].filter(
+          (w) =>
+            w !== sight[0] &&
+            !(["the", "my"].includes(sight[0]) && ["the", "my"].includes(w)),
+        ),
       );
       q.hint = "Read the whole sentence. Try each word in the gap.";
     }
