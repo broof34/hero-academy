@@ -5,6 +5,7 @@ import { StartupBoundary, StartupReady } from "./StartupBoundary";
 import "./style.css";
 import "./v4.css";
 import "./v41.css";
+import "./rebel.css";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <StartupBoundary>

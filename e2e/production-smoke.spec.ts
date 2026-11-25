@@ -32,6 +32,9 @@ for (const existing of [false, true]) {
     }
     await expect(page.getByRole("heading", { name: "YOUR WORLD. YOUR POWER." })).toBeVisible();
     await expect(page.getByRole("button", { name: "CONTINUE LEARNING" })).toBeVisible();
+    const cover = page.getByRole("img", { name: "A boy hero with colorful goggles holding a radio on a rooftop" });
+    await expect(cover).toBeVisible();
+    await expect.poll(() => cover.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
     const nav = page.getByRole("navigation", { name: "Main navigation" });
     for (const name of ["Home", "Learn", "Arcade", "Rewards", "Grown-ups"]) {
       await expect(nav.getByRole("button", { name, exact: true })).toBeVisible();

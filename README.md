@@ -1,4 +1,4 @@
-# Hero Academy V4.1: Multiverse Edition
+# Hero Academy V4.2 · Project REBEL
 
 A first-grade learning adventure with short missions, encouraging retries, effort rewards, an original comic-book superhero interface, and an earned arcade. React + Vite + TypeScript + plain CSS. No backend, account, subscription, advertising, or analytics.
 
@@ -156,6 +156,14 @@ HERO_REVIEW_DIR=/tmp/hero-academy-v4-review node scripts/review-v4.mjs
 ```
 
 The capture script checks browser errors, failed local assets and horizontal overflow. Optional `HERO_AXE_PATH=/absolute/path/to/axe.min.js` enables a locally injected axe-core accessibility audit; axe is a review tool and is not included in the application runtime.
+
+## V4.2 — Project REBEL
+
+The full-width Home cover features an original radio-wielding boy hero.
+A shared print collage frames the learning, arcade, rewards and grown-up
+screens. Bangers remains the Home display face. Barlow Condensed and Lexend
+are served locally on interior screens. See [DESIGN.md](DESIGN.md) for layout,
+motion, accessibility and reusable artwork.
 
 ## V4.1 — Visual polish, sound design and usability
 

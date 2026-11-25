@@ -2,7 +2,9 @@
 
 Hero Academy is a local-first React/TypeScript educational game, hosted on GitHub
 Pages at `/hero-academy/`. Read `DESIGN.md` before frontend work. Preserve its
-original cinematic punk-comic direction and accessible first-grader/grandmother UI.
+Project REBEL direction and accessible first-grader/grandmother UI. Preserve the
+full-width Home cover, original navigation layout, and opaque content surfaces
+over the interior collage backdrop.
 
 ## Design skills
 

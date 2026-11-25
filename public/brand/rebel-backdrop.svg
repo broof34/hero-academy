@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="880" viewBox="0 0 1440 880">
+  <defs>
+    <pattern id="dots" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="1.8" cy="1.8" r="1.8" fill="#120d17"/>
+      <circle cx="5.8" cy="5.8" r="1" fill="#120d17"/>
+    </pattern>
+    <pattern id="hatch" width="23" height="21" patternUnits="userSpaceOnUse">
+      <path d="M-3 16 18-3M3 22 25 2M-4 6 7-4" stroke="#110d14" stroke-width="3"/>
+    </pattern>
+    <pattern id="type" width="274" height="109" patternUnits="userSpaceOnUse" patternTransform="rotate(-21)">
+      <g fill="#140f18" font-family="Georgia, serif" font-weight="900">
+        <text x="-5" y="49" font-size="56" letter-spacing="-3">HERO HQ</text>
+        <text x="1" y="70" font-size="15" letter-spacing="1">PRACTICE  ·  LEARN  ·  PLAY</text>
+        <path d="M1 77h264v2H1zM4 86h205v3H4zM14 97h248v2H14z"/>
+      </g>
+    </pattern>
+    <path id="red" d="M0 0h847L665 107l-98 12-35 50-130 63-75-15-30 66-97 31-53 90L0 482Z"/>
+    <path id="pink" d="M1070 0h370v388l-88-31-15-49-100-36 24-36-123-43 19-52-98-42Z"/>
+    <path id="yellow" d="m0 555 197 86 81 8 46 50 96 8 34 49 104 29 5 37 135 58H0Z"/>
+    <path id="violet" d="m1440 536-189 63-32 41-124 13-14 39-113 16-60 65-95 7-196 100h823Z"/>
+  </defs>
+  <path fill="#17121d" d="M0 0h1440v880H0Z"/>
+  <path fill="#302639" d="M0 369 1440 23v69L0 502Zm0 386 1440-439v44L0 808Z"/>
+  <use href="#red" fill="#f43b48"/><use href="#red" fill="url(#type)"/><use href="#red" fill="url(#dots)"/>
+  <use href="#pink" fill="#fa41b4"/><use href="#pink" fill="url(#dots)"/>
+  <use href="#yellow" fill="#f4dc46"/><use href="#yellow" fill="url(#type)"/><use href="#yellow" fill="url(#dots)"/>
+  <use href="#violet" fill="#8847bc"/><use href="#violet" fill="url(#hatch)"/><use href="#violet" fill="url(#dots)"/>
+  <path fill="#efdd56" d="m1247 188 39 16-57 49 31 11-87 78 36-70-27-10Zm-1110 16 34 45-30 3 47 58-66-43 22-14-45-35Zm1193 473 46 31-39 19 20 72-49-74 24-21Z"/>
+  <path fill="#bde65d" d="m34 485 35-54-11 42 42-7-52 71 13-52Zm1325-330 51-14-13 24 29 19-56 10 13-21Z"/>
+  <path d="m60 96 207 26m-189-6 147 24m981 345 178-62m-142 68 118-21M328 757l91 23m-96-12 61 23" fill="none" stroke="#f5efe2" stroke-width="5" stroke-linecap="round" opacity=".62"/>
+</svg>

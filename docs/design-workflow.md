@@ -113,3 +113,25 @@ supported installer into a temporary destination. Reapply the documented local
 adaptations, verify discovery and the offline search, regenerate lock hashes and
 commit the reviewed changes together. Never overwrite this project's design with
 an upstream default. Keep caches, generated reports and learner data out of skills.
+
+## Project REBEL resource review
+
+- Paper Shaders offers canvas texture effects. The backdrop instead uses fixed SVG
+  halftone and CSS ink washes, which fit the printed look and keep lessons still.
+  [Paper Shaders](https://github.com/paper-design/shaders)
+- Rough.js draws hand-sketched shapes. The few reusable marks are authored SVG
+  paths and need no runtime drawing step. [Rough.js](https://github.com/rough-stuff/rough)
+- Motion provides React animation primitives. Existing finite CSS animations and
+  the saved and system reduced-motion controls cover the release interactions.
+  [Motion](https://motion.dev/docs/react)
+- React Bits, Aceternity UI and Magic UI provide animated components and effects.
+  The existing screen components already expose the controls and state the
+  redesign needs. [React Bits](https://github.com/DavidHDev/react-bits),
+  [Aceternity UI](https://ui.aceternity.com/components),
+  [Magic UI](https://github.com/magicuidesign/magicui)
+- Existing Lucide icons retain familiar navigation and control symbols.
+  [Lucide](https://lucide.dev/)
+- Reviewed Anton for its heavy narrow display, Rubik Dirt for distressed accents,
+  and Permanent Marker for hand lettering. Barlow Condensed Black gives a
+  compact banner line, and Lexend gives reading tasks a separate text face.
+  Bangers remains on Home. [Google Fonts](https://github.com/google/fonts)

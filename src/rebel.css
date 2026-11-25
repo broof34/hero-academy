@@ -1,0 +1,248 @@
+/* The Home cover keeps the Multiverse layout. Dark ink holds the title over brighter art. */
+.home-scene .multiverse-art { object-position: center 23%; }
+.home-scene .scene-shade {
+  background:
+    linear-gradient(90deg, #090811 2%, #090811eb 18%, #09081196 37%, #09081112 64%, transparent 80%),
+    linear-gradient(0deg, #070a15, transparent 22%);
+}
+
+@font-face {
+  font-family: Rebel Display;
+  src: url("/fonts/BarlowCondensed-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: Rebel Text;
+  src: url("/fonts/Lexend.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* Interior pages use the same wheatpaste wall beneath opaque reading surfaces. */
+.app-shell {
+  --rebel-ink: #131018;
+  --rebel-surface: #211923;
+  --rebel-paper: #fff1d7;
+  --rebel-red: #ff5969;
+  --rebel-pink: #fb80c9;
+  --rebel-yellow: #f4dc46;
+  --rebel-lime: #bde65d;
+  --rebel-dots: radial-gradient(#140f1b80 1px, transparent 1.15px) 0 0 / 5px 5px;
+}
+.app-shell:not([data-screen="home"]) .main-shell,
+.app-shell.is-playing .main-shell {
+  background:
+    linear-gradient(180deg, #100a165e 0, #100a1685 510px, #100a16 950px),
+    url("/brand/rebel-backdrop.svg") center top / max(100%, 1000px) auto no-repeat,
+    #100a16;
+}
+#main-content:not(.screen-home) {
+  --accent: var(--rebel-pink);
+  max-width: 1360px;
+  font-family: "Rebel Text", Arial, sans-serif;
+}
+#main-content:is(.screen-arcade, .screen-briefing, .screen-rewards, .screen-complete) {
+  --accent: var(--rebel-yellow);
+}
+#main-content:is(.screen-choose, .screen-mission, .screen-homework, .screen-break, .screen-parent) {
+  --accent: var(--rebel-lime);
+}
+#main-content:not(.screen-home) > .read-aloud {
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+#main-content .page-title {
+  padding: clamp(17px, 3vw, 30px);
+  margin-bottom: clamp(22px, 3.2vw, 36px);
+  border: 2px solid var(--rebel-paper);
+  border-left: 8px solid var(--accent);
+  box-shadow: 6px 6px #100a16;
+  background: var(--rebel-ink) url("/brand/ink-marks.svg") right 12px center / auto 96% no-repeat;
+}
+#main-content:not(.screen-parent) .page-title h1 {
+  font: 900 clamp(43px, 7vw, 96px)/.87 "Rebel Display", Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -.015em;
+  margin-block: 6px 10px;
+  color: var(--rebel-paper);
+  text-shadow: 2px 2px #100a16, 3px 3px #b82c61;
+}
+#main-content .page-title p:last-child { color: #e5d7e0; }
+#main-content .page-title > svg {
+  color: var(--rebel-ink);
+  background: var(--accent);
+  border: 2px solid var(--rebel-ink);
+  padding: 9px;
+  width: clamp(43px, 6vw, 66px);
+  height: auto;
+  transform: rotate(-7deg);
+  box-shadow: 3px 3px var(--rebel-paper);
+  flex-shrink: 0;
+}
+#main-content:not(.screen-home) .eyebrow { color: var(--accent); }
+#main-content:not(.screen-home) :is(.panel, .game-card) {
+  background: var(--rebel-surface);
+  border-color: #9c7c95;
+  border-radius: 0;
+  box-shadow: 4px 4px #0e0b13;
+}
+#main-content:not(.screen-home) .primary, .modal .primary {
+  color: var(--rebel-ink, #131018);
+  background: var(--rebel-yellow, #f4dc46);
+  border: 2px solid #171116;
+  border-radius: 0;
+  box-shadow: 3px 3px #100a16;
+}
+#main-content:not(.screen-home) .primary:not(:disabled):hover,
+.modal .primary:not(:disabled):hover { background: #fb80c9; color: #131018; }
+#main-content:not(.screen-home) :is(.secondary, .text-button):focus-visible,
+#main-content:not(.screen-home) :is(input, textarea, button, summary):focus-visible {
+  outline-color: #f4dc46;
+}
+#main-content:not(.screen-home) .secondary {
+  background: #2f2435;
+  border-color: #af879e;
+  border-radius: 0;
+}
+#main-content:not(.screen-home) .primary:disabled {
+  background: #3d313b;
+  color: #dfcfd7;
+  border-color: #947687;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.learn-menu {
+  display: grid;
+  grid-template-columns: minmax(0,1.35fr) minmax(0,1fr);
+  gap: 0 clamp(22px,4vw,56px);
+}
+.learn-menu > .page-title { grid-column: 1 / -1; }
+.learn-menu .subject-tiles, .learn-menu .learn-extras {
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 11px;
+  margin: 0;
+}
+.learn-menu .subject-tile {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  align-items: center;
+  justify-items: start;
+  column-gap: 15px;
+  min-height: 93px;
+  transform: none;
+  border-color: var(--rebel-ink);
+  box-shadow: 3px 3px #160e1b;
+  background: var(--accent);
+  --accent: var(--rebel-red);
+  color: var(--rebel-ink);
+}
+.learn-menu :is(.tile-math, .tile-reading, .tile-arcade) { --accent: var(--rebel-lime); }
+.learn-menu .tile-reading { --accent: var(--rebel-pink); }
+.learn-menu .tile-arcade { --accent: var(--rebel-yellow); }
+.learn-menu .subject-tile > * { transform: none; }
+.learn-menu .subject-tile::before { background: linear-gradient(90deg,var(--accent) 35%,transparent), var(--rebel-dots); }
+.learn-menu .subject-tile::after { content: none; }
+.learn-menu .subject-tile :is(strong, .tile-sub, .tile-number, .tile-arrow, .tile-icon) {
+  color: var(--rebel-ink);
+  filter: none;
+  text-shadow: none;
+}
+.learn-menu .subject-tile > strong { font-family: "Rebel Display", Impact, sans-serif; font-weight: 900; }
+.learn-menu .subject-tile .tile-icon {
+  width: 42px;
+  height: 42px;
+  grid-row: span 2;
+  margin: 0;
+  stroke: var(--rebel-ink);
+}
+.learn-menu .subject-tile .tile-arrow { right: 12px; bottom: 12px; }
+.learn-menu .subject-tile .tile-number { display: none; }
+.learn-menu .learn-feature { background: var(--rebel-surface); border-color: #a78199; }
+.learn-menu .learn-feature:hover { border-color: var(--rebel-pink); }
+
+#main-content .arcade-grid {
+  grid-template-columns: minmax(0,1.22fr) minmax(0,1fr);
+  gap: clamp(16px,3vw,35px);
+  align-items: end;
+}
+#main-content .arcade-card-content { background: var(--rebel-surface); border-top: 5px solid var(--rebel-red); }
+#main-content .game-card:nth-child(2) .arcade-card-content { border-top-color: var(--rebel-pink); }
+#main-content :is(.arcade-card-content h2, .reward-vault h2, .reward-record h2, .briefing h1) {
+  font: 900 clamp(34px, 4.2vw, 58px)/.95 "Rebel Display", Impact, sans-serif;
+  text-transform: uppercase;
+  color: var(--rebel-paper);
+}
+#main-content :is(.arcade-wallet, .reward-vault) { border-left: 7px dashed var(--rebel-yellow); }
+#main-content .reward-record { border-top: 6px solid var(--rebel-pink); }
+#main-content .record-total { background: #372432; border-color: #a78199; }
+#main-content .vault-symbol { background: var(--rebel-yellow); color: var(--rebel-ink); }
+#main-content .progress-track.gold > div { background: var(--rebel-yellow); }
+#main-content .celebration { border-top: 8px solid var(--rebel-yellow); }
+#main-content :is(.question-panel, .weekly-turn, .weekly-feedback, .homework-panel, .mission-intro) {
+  border-top: 6px solid var(--accent);
+}
+#main-content :is(.question-panel, .weekly-turn, .weekly-feedback) h1 {
+  font-family: "Rebel Text", Arial, sans-serif;
+}
+#main-content :is(.mission-top, .calm-note) {
+  color: #e5d7e0;
+  background: var(--rebel-ink);
+  border: 1px solid #9c7c95;
+  padding: 5px 10px;
+}
+#main-content :is(.focused, .briefing) > .text-button {
+  background: var(--rebel-ink);
+  border: 1px solid #9c7c95;
+  padding-inline: 10px;
+}
+#main-content .adult-jumps a { background: var(--rebel-ink); border-color: #a78199; }
+#main-content.screen-parent .panel { box-shadow: none; }
+#main-content .weekly-mode { background: #2c212f; border-color: #95768d; }
+#main-content .weekly-mode.mode-test { border-top-color: var(--rebel-red); }
+#main-content .weekly-mode.mode-tricky { border-top-color: var(--rebel-yellow); }
+#main-content .weekly-mode.mode-mixed { border-top-color: var(--rebel-lime); }
+.modal { background: #211923; border-color: #ad879f; border-top: 5px solid #fb80c9; border-radius: 0; }
+
+/* Reward stickers use the same hero as the Home cover. */
+.fx-hero-reaction {
+  background-image: url("/art/rebel-cover-small.webp");
+  background-position: 76% 22%;
+  border-color: #fff1d7;
+  box-shadow: 5px 5px #fb80c9;
+}
+
+@media (min-width: 1151px) and (max-width: 1350px) {
+  .scene-copy .scene-caption { display: none; }
+}
+
+@media (max-width: 760px) {
+  #main-content .arcade-grid { grid-template-columns: 1fr; }
+  .learn-menu { grid-template-columns: 1fr; row-gap: 17px; }
+  .learn-menu > .page-title { margin-bottom: 0; }
+  .learn-menu .subject-tiles { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .learn-menu .subject-tile {
+    min-height: 86px;
+    padding: 9px;
+    column-gap: 6px;
+    grid-template-rows: auto;
+  }
+  .learn-menu .subject-tile .tile-icon { width: 25px; height: 25px; grid-row: auto; }
+  .learn-menu .subject-tile > strong { font-size: clamp(20px, 5.8vw, 35px); }
+  .learn-menu .subject-tile :is(.tile-sub, .tile-arrow) { display: none; }
+}
+@media (max-width: 600px) {
+  .home-scene .multiverse-art { object-position: 57% center; }
+  .home-scene .scene-shade {
+    background:
+      linear-gradient(0deg, #070a15, #070a1510 34%, transparent 50%, #070a155c 70%, #070a15da 100%),
+      linear-gradient(90deg, #070a15c9, #070a153d 72%, transparent);
+  }
+  #main-content .page-title { padding: 14px; background-position: right bottom; }
+  #main-content:not(.screen-parent) .page-title h1 { font-size: clamp(37px,10vw,58px); }
+}

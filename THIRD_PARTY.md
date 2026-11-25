@@ -119,3 +119,17 @@ The comic explosion paths, ink splashes, halftone patterns, lettering compositio
 Existing MIT Super Kart source was modified to add an independent effects bus, preserve zero/quiet music volume during victory ducking, and accept host channel volumes. Its adapter and the MIT Galactic Patrol adapter now receive bounded volume settings; game bundles were rebuilt using the existing build scripts. Original upstream MIT/Three.js/Kenney notices remain distributed unchanged.
 
 Speech uses only browser-reported local English voices and does not redistribute voice files. Availability and pronunciation depend on the user's installed OS voices. No speech API, remote audio service or tracking was added.
+
+## Project REBEL typography and cover
+
+- **Barlow Condensed Black** — The Barlow Project Authors. SIL OFL 1.1.
+  The license ships at `public/fonts/Barlow-OFL.txt`. Source:
+  https://github.com/google/fonts/tree/main/ofl/barlowcondensed.
+- **Lexend** — The Lexend Project Authors. SIL OFL 1.1.
+  The license ships at `public/fonts/Lexend-OFL.txt`. Source:
+  https://github.com/google/fonts/tree/main/ofl/lexend.
+- The redistributed fonts are locally hosted Latin WOFF2 subsets. The cutout
+  wordmark uses Barlow Condensed letter outlines as artwork. Original
+  Project REBEL SVG illustrations and cover provenance are documented in
+  `public/art/ATTRIBUTION.md`. Existing Lucide icons and CSS animation are
+  used in place of adding a shader, drawing or animation runtime.

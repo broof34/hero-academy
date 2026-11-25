@@ -86,8 +86,12 @@ export function HomeMenu(
       <section className="home-scene" aria-labelledby="home-title">
         <img
           className="multiverse-art"
-          src={import.meta.env.BASE_URL + "art/multiverse-city.webp"}
-          alt="Original masked hero with an amber visor and red scarf landing above a neon city in a torn-paper comic collage"
+          src={import.meta.env.BASE_URL + "art/rebel-cover.webp"}
+          srcSet={`${import.meta.env.BASE_URL}art/rebel-cover-small.webp 720w, ${import.meta.env.BASE_URL}art/rebel-cover.webp 1440w`}
+          sizes="100vw"
+          width="1440"
+          height="810"
+          alt="A boy hero with colorful goggles holding a radio on a rooftop"
           fetchPriority="high"
         />
         <div className="scene-shade" />
@@ -166,7 +170,7 @@ export function LearnMenu(props: MenuProps) {
     <div className="learn-menu">
       <header className="page-title">
         <div>
-          <p className="eyebrow">TRAINING GROUNDS / 01</p>
+          <p className="eyebrow">TRAINING GROUNDS</p>
           <h1>Pick your power.</h1>
           <p>Five questions. Your pace.</p>
         </div>
@@ -228,9 +232,8 @@ export function Rewards({
     <div className="rewards-screen">
       <header className="page-title">
         <div>
-          <p className="eyebrow">EARNED. NEVER GIVEN UP.</p>
+          <p className="eyebrow">STARS & TICKETS</p>
           <h1>Your rewards.</h1>
-          <p>Your effort opens new worlds.</p>
         </div>
         <Trophy size={46} aria-hidden="true" />
       </header>
@@ -239,7 +242,6 @@ export function Rewards({
           <div className="vault-symbol" aria-hidden="true">
             <Star fill="currentColor" />
           </div>
-          <p className="eyebrow">READY FOR YOUR NEXT UNLOCK?</p>
           <h2>Stars into play.</h2>
           <div className="wallet-totals">
             <span>

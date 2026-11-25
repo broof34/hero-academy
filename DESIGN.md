@@ -10,10 +10,10 @@ Create distinct characters and symbols; do not reproduce franchise costumes,
 logos, movie frames or reference illustrations. The learner is a first grader;
 the grown-up may be a grandmother who needs familiar, readable controls.
 
-## Foundations
+## Shared Multiverse foundations
 
-The implementation sources of truth are `src/v4.css`, `src/v41.css` and shared
-components. Extend existing semantic variables instead of inventing a new palette.
+The shared structure and Home styling are in `src/v4.css` and `src/v41.css`.
+Interior screens use the REBEL patterns and palette documented below.
 
 | Role | Current value / use |
 | --- | --- |
@@ -92,3 +92,44 @@ Record observed evidence rather than declaring quality from a successful build.
   are observations, not proof of accessibility or permission to copy assets.
 
 Pinned sources, licenses, review scope and updates: `docs/design-workflow.md`.
+
+## Project REBEL
+
+Home follows the Multiverse cover layout: full-bleed key art behind the title,
+Continue Learning at the left, then the overlapping angled subject panels and
+the utility links. Keep the original Home masthead, navigation spacing and
+responsive stacking. Treat the cover as an illustration layer. It can change
+without moving the controls or changing their names.
+
+Use `src/rebel.css` for the interior theme. The color palette pairs ink
+(`#131018`), charcoal plum (`#211923`) and warm paper (`#fff1d7`) with poster
+red (`#ff5969`), magenta (`#fb80c9`), yellow (`#f4dc46`) and lime (`#bde65d`).
+Magenta marks the mission index and spelling hub, yellow the arcade and
+rewards, and lime focused activities and grown-up sections. Color supports
+existing text, icons and state labels.
+
+- **Backgrounds:** `public/brand/rebel-backdrop.svg` layers torn fragments,
+  halftone, angular lightning, overprinted type and hatch marks. Use it on
+  the page canvas under an ink wash. Keep the lesson, timer and settings
+  surfaces opaque. `ink-marks.svg` provides small hand-drawn accents.
+- **Type:** Home retains Bangers and the existing text style. Interior page
+  banners, mission labels and arcade headlines use Barlow Condensed Black.
+  Lexend is the interior text face, including questions and answer controls.
+  Parent headings prioritize familiar sentence case and regular typography.
+  All fonts are served locally.
+- **Brand:** Use `wordmark.svg` when the name stands alone, `navigation.svg`
+  for a compact symbol-and-wordmark lockup, `wordmark-mono.svg` where only
+  black and paper are available, and `signal.svg` where the name is already
+  present. The startup screen uses the wordmark and the favicon uses the
+  signal. The cutout concept gives the name readable silhouettes. The solid
+  distressed treatment was considered for a cover and the standalone emblem
+  was considered for navigation.
+- **Screen patterns:** Learn uses a short mission index and a utility column.
+  Arcade uses an offset pair of gameplay panels. Rewards uses a ticket edge
+  and a separate lifetime record. Homework and lessons use bordered inset
+  panels. Parent controls use conventional labeled forms over an opaque
+  surface.
+- **Motion and accessibility:** Reuse the existing finite press, impact and
+  reward animations. Check both reduced-motion settings, 48px touch targets,
+  keyboard focus, and contrast on the actual control surface. Keep backdrop
+  movement and grain away from questions, options, input controls and dialogs.

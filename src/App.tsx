@@ -180,7 +180,7 @@ export default function App() {
       </main>
     );
   return (
-    <div className={`app-shell ${state.session ? "is-playing" : ""}`}>
+    <div className={`app-shell ${state.session ? "is-playing" : ""}`} data-screen={screen}>
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
@@ -207,7 +207,7 @@ export default function App() {
             const active =
               n.id === screen ||
               (n.id === "missions" &&
-                ["choose", "mission", "complete", "homework", "break"].includes(
+                ["choose", "mission", "complete", "homework", "break", "spelling-hq"].includes(
                   screen,
                 )) ||
               (n.id === "arcade" && (screen === "briefing" || !!state.session));
@@ -405,7 +405,7 @@ export default function App() {
                 <>
                   <header className="page-title">
                     <div>
-                      <p className="eyebrow">EARNED THROUGH YOUR EFFORT</p>
+                      <p className="eyebrow">TICKET ARCADE</p>
                       <h1>The arcade is yours.</h1>
                       <p>
                         One ticket, one game, {state.settings.gameMinutes}{" "}

@@ -19,3 +19,12 @@ No preview is an invented game mockup. `src/Art.tsx` mission badges use original
 Final generation prompt:
 
 > Create a spectacular premium original panoramic key illustration for a superhero video game main menu, landscape 16:9. Punk zine / hand printed underground comic collage aesthetic: torn paper silhouettes, rough black ink hatching, halftone shading, screenprinted texture, misregistered cyan/magenta edges, scratchy speed lines, deep midnight navy and black, saturated crimson, electric cyan and violet with tiny acid-yellow accents. Dark cinematic atmosphere, strong graphic clarity, NOT cute, NOT childish, NOT smooth generic AI 3D. Composition: LEFT 40% is dark atmospheric layered city rooftops and sparse textured paper, enough low detail for large white UI text overlay (DO NOT draw any text). RIGHT half features a striking wholly ORIGINAL athletic young adult masked urban superhero in a dynamic foreshortened rooftop landing pose, one gloved hand reaching forward. Original costume: charcoal motorcycle-style jacket with angular cyan shoulder patches, flowing crimson scarf, segmented black trousers and boots, single narrow amber visor across an asymmetrical graphite helmet, a small abstract cyan lightning diamond on chest. No spider logo, no spider-web patterns, no large white eye shapes, no recognizable existing character. Deliberately asymmetrical costume, rough cutout light cream outline selectively around hero like a pasted paper sticker, red/cyan dramatic rim light. A violet/cyan angular portal and distant skyscraper silhouettes behind hero, red spraypaint swashes, black-and-white newspaper-like texture scraps with NO readable text. Original art, no franchise characters, logos or copyrighted movie assets, no words, no typography, no watermarks. Beautiful detailed illustration with bold powerful silhouette, not a web page mockup. Keep all hero face and reaching hand visible in center-right and within margins. Original exhilarating punk rock energy appropriate for family use.
+
+## Project REBEL
+
+The production Home cover is original artwork generated for Hero Academy
+with the built-in image-generation tool. Its flyer composition uses a dark
+left-hand text area, torn newsprint, halftone, saturated print inks and an
+original school-age boy hero holding a rooftop radio. The supplied poster images informed the art
+direction. The desktop and mobile WebP files are encodings of the same cover.
+Interior backdrops and marks in `public/brand/` are original SVG drawings.
