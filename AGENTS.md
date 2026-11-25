@@ -53,3 +53,13 @@ smoke tests; avoid claiming an agent behavior test was performed when only metad
 was checked. Never claim publishing succeeded until the deployment and live page
 have been verified. `.github/workflows/pages.yml` validates pushes; deployment
 requires an authorized manual workflow dispatch.
+
+Before publishing, verify the repository's Pages API returns `build_type: workflow`.
+Never use branch-root publishing for this Vite app: it serves uncompiled
+`/src/main.tsx`. Run `npm run check:build` and `npm run test:production` against
+the built artifact. After deployment finishes, run the production suite against
+the actual public URL with `HERO_EXPECTED_SHA` set to the deployed commit. Confirm
+the final push has not triggered a competing `pages-build-deployment` publisher.
+Review actual desktop/tablet/mobile screenshots and exercise learning and games.
+A successful Actions deployment or an HTTP 200 alone is not release verification.
+See `docs/production-startup-incident.md` for the confirmed V4.1 incident.

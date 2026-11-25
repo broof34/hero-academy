@@ -101,6 +101,24 @@ The application does not import Three.js into its own runtime. The approximately
 
 ## Deployment
 
+Pages **Settings → Build and deployment → Source must be GitHub Actions**
+(`build_type: workflow`). Publishing the repository root from a branch serves
+the uncompiled Vite entrypoint and produces a blank screen. The workflow checks
+this setting, validates compiled assets and runs production browser tests before
+publishing, then verifies the public site and its commit marker after deployment.
+
+```sh
+npm run build
+npm run check:build
+npm run test:production
+HERO_TEST_URL=https://broof34.github.io/hero-academy/ HERO_EXPECTED_SHA=<deployed-commit> npm run test:production
+```
+
+The production tests assert visible homepage/navigation, answer a math question,
+reload persisted progress, and exercise missing-module/runtime/storage recovery.
+They use isolated browser storage and never alter another browser's saved data.
+Startup recovery can reload or export a save; it never automatically resets it.
+
 GitHub Actions validates pushes to `codex/hero-academy-v3` and `codex/hero-academy-v4`; **deployment requires a manual workflow dispatch after validation**. This keeps the previous live version safe during development. Select “Validate and deploy Hero Academy” → “Run workflow” → `codex/hero-academy-v4`, or:
 
 ```sh

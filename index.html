@@ -1,1 +1,14 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><meta name="theme-color" content="#070d19"/><meta name="description" content="Your world. Your power. First-grade math, spelling, reading, and earned arcade adventures. Local-first. No accounts or ads."/><title>Hero Academy V4.1 · Multiverse Edition</title><link rel="icon" type="image/svg+xml" href="./favicon.svg"/></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><meta name="theme-color" content="#070d19"/><meta name="description" content="Your world. Your power. First-grade math, spelling, reading, and earned arcade adventures. Local-first. No accounts or ads."/><title>Hero Academy V4.1 · Multiverse Edition</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"/><style>
+body{margin:0;background:#060812;color:#f6f7fc;font-family:Arial,Helvetica,sans-serif}
+#startup{box-sizing:border-box;position:fixed;inset:0;z-index:10000;overflow:auto;display:grid;align-content:center;padding:clamp(24px,7vw,80px);background:#0b1021;line-height:1.6}
+#startup[hidden],#startup [hidden]{display:none}
+#startup h1{font-size:clamp(26px,5vw,44px);line-height:1.2;max-width:24ch}
+#startup p{max-width:62ch}
+#startup button{font:inherit;min-height:48px;padding:12px 20px;margin:8px 12px 8px 0;border:2px solid #55dfff;background:#111827;color:#f6f7fc;cursor:pointer}
+#startup button:focus-visible{outline:3px solid #ffcf62;outline-offset:4px}
+#startup button:disabled{opacity:.6;cursor:default}
+</style></head><body><section id="startup" aria-label="Hero Academy startup">
+<div id="startup-loading" role="status"><h1>Opening Hero Academy…</h1><p>Your next adventure is loading.</p></div>
+<div id="startup-failure" hidden role="alert"><h1 tabindex="-1">Hero Academy could not start</h1><p>The app could not finish loading. Your saved progress has not been reset. Try reloading, or download a backup before asking a grown-up for help.</p><button id="startup-reload" type="button">Reload Hero Academy</button><button id="startup-export" type="button">Download saved progress</button><p id="startup-detail"></p></div>
+<noscript><p>Hero Academy needs JavaScript. Enable it for this site, then reload. Your saved progress stays in this browser.</p></noscript>
+</section><div id="root"></div><script src="/startup.js"></script><script type="module" src="/src/main.tsx"></script></body></html>

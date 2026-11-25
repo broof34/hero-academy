@@ -15,6 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Require artifact-based Pages publishing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mode=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type)
+          if [ "$mode" != workflow ]; then
+            echo "::error::GitHub Pages must use GitHub Actions, not Deploy from a branch. Branch publishing serves raw Vite source."
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -26,6 +35,15 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - run: npm run check:build
+      - run: npx playwright install --with-deps chromium
+      - name: Test the built production artifact
+        run: npm run test:production
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: production-test-failure
+          path: test-results/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -41,3 +59,25 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+  verify-public:
+    if: github.event_name == 'workflow_dispatch'
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Verify visible public content, interaction, saved progress and recovery
+        env:
+          HERO_TEST_URL: https://broof34.github.io/hero-academy/
+          HERO_EXPECTED_SHA: ${{ github.sha }}
+        run: npm run test:production
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: public-test-failure
+          path: test-results/
