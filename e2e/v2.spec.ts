@@ -41,6 +41,7 @@ type KartDebug = {
 };
 test("3D racing actually drives; pause, fallback and reload preserve one deadline", async ({
   page,
+  baseURL,
 }) => {
   const errors: string[] = [],
     badAssets: string[] = [],
@@ -51,7 +52,7 @@ test("3D racing actually drives; pause, fallback and reload preserve one deadlin
   });
   page.on("request", (r) => {
     if (
-      !r.url().startsWith("http://127.0.0.1:5173/") &&
+      !r.url().startsWith(new URL(baseURL!).origin + "/") &&
       !r.url().startsWith("data:")
     )
       external.push(r.url());

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Lightbulb,
-  Volume2,
   Star,
   Check,
   Timer,
@@ -18,23 +17,12 @@ import {
 } from "./model";
 import { topics, type Question } from "./learning";
 import { MissionArt } from "./Art";
+import { recordAnswer, clearEffects } from "./Effects";
+import { ComboBadge } from "./ComicBurst";
+import { ReadAloud } from "./ReadAloud";
+import { cancelSpeech, questionInstruction, speak } from "./speech";
 import { AdultGate, type Change } from "./Parent";
-export function speak(text: string, enabled: boolean): string {
-  if (!enabled) return "Turn on spoken instructions in the grown-up zone.";
-  if (!("speechSynthesis" in window))
-    return "This browser does not support read aloud.";
-  const voice = speechSynthesis
-    .getVoices()
-    .find((v) => v.localService && v.lang.startsWith("en"));
-  if (!voice)
-    return "No local English voice is available on this device yet. Try again in a moment or ask a grown-up to read.";
-  speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.voice = voice;
-  utterance.rate = 0.8;
-  speechSynthesis.speak(utterance);
-  return "";
-}
+export { speak } from "./speech";
 export function SkillChooser({
   subject,
   state,
@@ -63,6 +51,10 @@ export function SkillChooser({
               : "Story Files"}
         </h1>
         <p>Five questions. Take your time. You can always ask for a hint.</p>
+        <ReadAloud
+          settings={state.settings}
+          text="Choose a skill, then tap Let's go. There are five questions. Take your time. Hints and retries are always available."
+        />
         <label>
           Choose a skill
           <select value={topic} onChange={(e) => setTopic(e.target.value)}>
@@ -103,9 +95,16 @@ export function Mission({
     [feedback, setFeedback] = useState(""),
     [hint, setHint] = useState(false),
     [solved, setSolved] = useState(false),
-    [tiles, setTiles] = useState<number[]>([]),
-    [voiceNote, setVoiceNote] = useState("");
+    [tiles, setTiles] = useState<number[]>([]);
+  const [combo, setCombo] = useState(0);
+  const [hadMiss, setHadMiss] = useState(false);
   const q = questions[index];
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    document
+      .querySelector<HTMLElement>(".question-panel h1")
+      ?.focus({ preventScroll: true });
+  }, [index]);
   useEffect(
     () => () => {
       if ("speechSynthesis" in window) speechSynthesis.cancel();
@@ -118,9 +117,19 @@ export function Mission({
     if (value.trim().toLowerCase() === q.answer.trim().toLowerCase()) {
       setSolved(true);
       setFeedback("You did it! +1 star");
-    } else setFeedback("Good effort! Try again.");
+      setCombo(recordAnswer(true, !hadMiss));
+    } else {
+      setFeedback("Good effort! Try again.");
+      setCombo(0);
+      setHadMiss(true);
+      recordAnswer(false);
+      if (state.settings.spokenEncouragement)
+        speak("Good effort. Try again, or tap I need a hint.", state.settings);
+    }
   }
   function next() {
+    clearEffects();
+    cancelSpeech();
     if (index === questions.length - 1) {
       onDone();
       return;
@@ -130,6 +139,7 @@ export function Mission({
     setFeedback("");
     setHint(false);
     setSolved(false);
+    setHadMiss(false);
     setTiles([]);
   }
   return (
@@ -142,13 +152,30 @@ export function Mission({
           {index + 1} of {questions.length} questions
         </span>
         <span className="star-chip">
-          <Star size={17} /> {index} earned
+          <Star size={17} /> {index + Number(solved)} earned
         </span>
       </div>
-      <div className="progress-track">
-        <div style={{ width: `${(index / questions.length) * 100}%` }} />
+      <div
+        className="progress-track"
+        role="progressbar"
+        aria-label="Mission progress"
+        aria-valuenow={index + Number(solved)}
+        aria-valuemin={0}
+        aria-valuemax={questions.length}
+      >
+        <div
+          style={{
+            width: `${((index + Number(solved)) / questions.length) * 100}%`,
+          }}
+        />
       </div>
+      <ComboBadge streak={combo} />
       <section className="question-panel panel">
+        <ReadAloud
+          settings={state.settings}
+          text={questionInstruction(q)}
+          label="Read aloud"
+        />
         <p className="eyebrow">
           {q.subject.toUpperCase()} MISSION · ONE SMALL STEP
         </p>
@@ -171,7 +198,7 @@ export function Mission({
             {q.picture}
           </div>
         )}
-        <h1>{q.prompt}</h1>
+        <h1 tabIndex={-1}>{q.prompt}</h1>
         {q.equation && (
           <div className="equation" data-testid="equation">
             {q.equation}
@@ -274,25 +301,7 @@ export function Mission({
             <Lightbulb size={19} />
             {hint ? "Hide hint" : "I need a hint"}
           </button>
-          <button
-            className="text-button"
-            onClick={() =>
-              setVoiceNote(
-                speak(
-                  [q.passage, q.prompt, q.equation].filter(Boolean).join(" "),
-                  state.settings.sound,
-                ),
-              )
-            }
-          >
-            <Volume2 size={19} /> Read aloud
-          </button>
         </div>
-        {voiceNote && (
-          <p role="status" className="fine-print">
-            {voiceNote}
-          </p>
-        )}
         {solved && (
           <button className="primary next" onClick={next}>
             {index === questions.length - 1
@@ -332,6 +341,18 @@ export function Homework({ state, change }: { state: State; change: Change }) {
   return (
     <div className="focused">
       <section className="panel homework-panel">
+        <ReadAloud
+          settings={state.settings}
+          text={
+            phase === "check"
+              ? "Focus time finished. Ask a grown-up to confirm your effort."
+              : phase === "break"
+                ? "Take a break. Step away, stretch and get a drink."
+                : phase === "done"
+                  ? "Your focus round is complete. Great effort."
+                  : "Choose one small piece of homework. Tap Start focus time. You can pause or ask your grown-up for help."
+          }
+        />
         <div className="round-icon">
           <Timer />
         </div>
@@ -431,8 +452,10 @@ export function Homework({ state, change }: { state: State; change: Change }) {
 export function BreakTime({
   minutes,
   onDone,
+  settings,
 }: {
   minutes: number;
+  settings?: State["settings"];
   onDone: () => void;
 }) {
   const [deadline] = useState(() => Date.now() + minutes * 60000),
@@ -447,6 +470,12 @@ export function BreakTime({
   return (
     <div className="focused">
       <section className="panel homework-panel">
+        {settings && (
+          <ReadAloud
+            settings={settings}
+            text="Take a screen-free break. Stretch, breathe and get a drink. Tap Back to base when you are ready."
+          />
+        )}
         <div className="round-icon">
           <Coffee />
         </div>

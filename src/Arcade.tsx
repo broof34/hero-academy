@@ -15,6 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { games } from "./games";
+import { ReadAloud } from "./ReadAloud";
 import {
   clock,
   remainingSeconds,
@@ -47,6 +48,10 @@ export function GameBriefing({
   const game = games[id];
   return (
     <div className="briefing">
+      <ReadAloud
+        settings={state.settings}
+        text={`${game.title}. ${game.touch} You need one ticket to launch. Your timer starts when you press Launch game.`}
+      />
       <button className="text-button" onClick={onBack}>
         <ArrowLeft size={18} /> Back to arcade
       </button>
@@ -125,19 +130,40 @@ export function GameSession({
 }) {
   const [seconds, setSeconds] = useState(() => remainingSeconds(session));
   const [paused, setPaused] = useState(false),
-    [muted, setMuted] = useState(!settings.sound),
+    [muted, setMuted] = useState(
+      settings.audioMuted ||
+        (!(settings.effectsSound && settings.effectsVolume > 0) &&
+          !(
+            session.game === "racer" &&
+            settings.musicSound &&
+            settings.musicVolume > 0
+          )),
+    ),
     [expanded, setExpanded] = useState(false),
     [ready, setReady] = useState(false),
     [error, setError] = useState(false),
     [fallback, setFallback] = useState(false);
+  const [gameEffects, setGameEffects] = useState(settings.effectsSound);
   const frame = useRef<HTMLIFrameElement>(null);
   const game = games[session.game];
   const reducedMotion =
     settings.reducedMotion ||
     (typeof matchMedia === "function" &&
       matchMedia("(prefers-reduced-motion: reduce)").matches);
-  const settingsRef = useRef({ paused, muted, reducedMotion });
-  settingsRef.current = { paused, muted, reducedMotion };
+  const settingsRef = useRef({
+    paused,
+    muted,
+    reducedMotion,
+    effectsVolume: gameEffects ? settings.effectsVolume : 0,
+    musicVolume: settings.musicSound ? settings.musicVolume : 0,
+  });
+  settingsRef.current = {
+    paused,
+    muted,
+    reducedMotion,
+    effectsVolume: gameEffects ? settings.effectsVolume : 0,
+    musicVolume: settings.musicSound ? settings.musicVolume : 0,
+  };
   const send = () =>
     frame.current?.contentWindow?.postMessage(
       { type: "academy:settings", ...settingsRef.current },
@@ -166,7 +192,15 @@ export function GameSession({
   }, []);
   useEffect(() => {
     send();
-  }, [paused, muted, reducedMotion]);
+  }, [
+    paused,
+    muted,
+    reducedMotion,
+    gameEffects,
+    settings.effectsVolume,
+    settings.musicSound,
+    settings.musicVolume,
+  ]);
   useEffect(() => {
     const hide = () => {
       if (document.hidden) setPaused(true);
@@ -206,7 +240,15 @@ export function GameSession({
           </button>
           <button
             className="icon-button"
-            onClick={() => setMuted(!muted)}
+            onClick={() => {
+              if (
+                muted &&
+                !gameEffects &&
+                !(session.game === "racer" && settings.musicSound)
+              )
+                setGameEffects(true);
+              setMuted(!muted);
+            }}
             aria-label={muted ? "Unmute game" : "Mute game"}
           >
             {muted ? <VolumeX size={19} /> : <Volume2 size={19} />}

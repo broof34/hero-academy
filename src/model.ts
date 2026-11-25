@@ -10,6 +10,15 @@ export type Settings = {
   focusMinutes: number;
   breakMinutes: number;
   sound: boolean;
+  audioMuted: boolean;
+  effectsSound: boolean;
+  effectsVolume: number;
+  musicSound: boolean;
+  musicVolume: number;
+  speechVolume: number;
+  speechRate: number;
+  autoRead: boolean;
+  spokenEncouragement: boolean;
   reducedMotion: boolean;
 };
 export type Session = { game: GameId; endsAt: number };
@@ -56,11 +65,29 @@ export const freshState = (): State => ({
     focusMinutes: 10,
     breakMinutes: 3,
     sound: false,
+    audioMuted: false,
+    effectsSound: false,
+    effectsVolume: 0.45,
+    musicSound: false,
+    musicVolume: 0.25,
+    speechVolume: 0.8,
+    speechRate: 0.85,
+    autoRead: false,
+    spokenEncouragement: false,
     reducedMotion: false,
   },
 });
 const bounded = (n: number, min: number, max: number) =>
   Number.isFinite(n) ? Math.max(min, Math.min(max, Math.round(n))) : min;
+const fractional = (
+  value: number,
+  min: number,
+  max: number,
+  fallback: number,
+) =>
+  typeof value === "number" && Number.isFinite(value)
+    ? Math.round(Math.max(min, Math.min(max, value)) * 100) / 100
+    : fallback;
 export function updateSettings(s: State, patch: Partial<Settings>): State {
   const v = { ...s.settings, ...patch };
   const subjects = v.subjects.filter((x) =>
@@ -77,6 +104,15 @@ export function updateSettings(s: State, patch: Partial<Settings>): State {
       focusMinutes: bounded(v.focusMinutes, 1, 60),
       breakMinutes: bounded(v.breakMinutes, 1, 30),
       sound: v.sound === true,
+      audioMuted: v.audioMuted === true,
+      effectsSound: v.effectsSound === true,
+      musicSound: v.musicSound === true,
+      musicVolume: fractional(v.musicVolume, 0, 1, 0.25),
+      effectsVolume: fractional(v.effectsVolume, 0, 1, 0.45),
+      speechVolume: fractional(v.speechVolume, 0, 1, 0.8),
+      speechRate: fractional(v.speechRate, 0.6, 1.2, 0.85),
+      autoRead: v.autoRead === true,
+      spokenEncouragement: v.spokenEncouragement === true,
       reducedMotion: v.reducedMotion === true,
     },
   };
@@ -162,7 +198,11 @@ export function hydrate(raw: unknown): State {
         r.subjects.some((x) => typeof x !== "string"))
     )
       throw new Error("Invalid subjects.");
-    s.settings = updateSettings(s, r as Partial<Settings>).settings;
+    s.settings = updateSettings(s, {
+      ...r,
+      effectsSound:
+        typeof r.effectsSound === "boolean" ? r.effectsSound : r.sound === true,
+    } as Partial<Settings>).settings;
   }
   if (raw.stats !== undefined) {
     if (!object(raw.stats)) throw new Error("Invalid statistics.");

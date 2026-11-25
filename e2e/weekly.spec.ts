@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(() => expect(errors).toEqual([]));
 async function adult(page: Page) {
   await page
-    .getByRole("button", { name: "Grown-up zone" })
+    .getByRole("button", { name: "Grown-ups" })
     .filter({ visible: true })
     .click();
   const n = (await page.getByTestId("adult-challenge").innerText())
@@ -54,6 +54,7 @@ test("parents create normalized lists and the builder handles repeated letters a
   await expect(page.getByTestId("star-balance")).toHaveText("2");
   await page.reload();
   await page.getByRole("button", { name: "Spelling HQ", exact: true }).click();
+  await page.locator(".weekly-words > summary").click();
   await expect(
     page.getByText("balloon", { exact: true }).first(),
   ).toBeVisible();
@@ -71,12 +72,14 @@ test("independent tests hide targets and corrections until the final results", a
     return d.current.items[0].word.text;
   });
   await expect(page.locator("main")).not.toContainText(target);
+  await expect(page.locator(".effect-layer")).toHaveCount(0);
   const input = page.getByLabel("Your spelling");
   await expect(input).toHaveAttribute("autocomplete", "off");
   await expect(input).toHaveAttribute("spellcheck", "false");
   await input.fill("wrong");
   await page.getByRole("button", { name: "Save test answer" }).click();
   await expect(page.locator("main")).not.toContainText(target);
+  await expect(page.locator(".effect-layer")).toHaveCount(0);
   await page.getByRole("button", { name: "Next word" }).click();
   const second = await page.evaluate(
     () =>
@@ -84,9 +87,12 @@ test("independent tests hide targets and corrections until the final results", a
         .current.items[1].word.text,
   );
   await expect(page.locator("main")).not.toContainText(second);
+  await expect(page.locator(".effect-layer")).toHaveCount(0);
   await input.fill(second);
   await page.getByRole("button", { name: "Save test answer" }).click();
-  await page.getByRole("button", { name: "See test results" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Practice test complete!" }),
+  ).toBeVisible();
   await expect(page.getByText("1 of 2 correct", { exact: true })).toBeVisible();
   await expect(page.getByText(target, { exact: true }).first()).toBeVisible();
   await expect(page.getByTestId("star-balance")).toHaveText("3");
@@ -183,6 +189,7 @@ test("adult list editing, sentences, archive/reuse and transfer leave existing s
     .getByRole("button", { name: "Save settings", exact: true })
     .click();
   await page.getByRole("button", { name: "Spelling HQ", exact: true }).click();
+  await page.locator(".weekly-words > summary").click();
   await expect(page.getByText("school", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("little", { exact: true }).first()).toBeVisible();
   await expect(page.getByTestId("star-balance")).toHaveText("0");
@@ -285,7 +292,9 @@ test("correct test answers do not reveal correctness through stars or progress b
   await page.getByRole("button", { name: "Resume spelling mission" }).click();
   await page.getByLabel("Your spelling").fill("wrong");
   await page.getByRole("button", { name: "Save test answer" }).click();
-  await page.getByRole("button", { name: "See test results" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Practice test complete!" }),
+  ).toBeVisible();
   await expect(page.getByText("1 of 2 correct", { exact: true })).toBeVisible();
   await expect(page.getByTestId("star-balance")).toHaveText("3");
 });

@@ -19,7 +19,16 @@ import {
 } from "lucide-react";
 import type { State } from "../model";
 import { AdultGate, type Change } from "../Parent";
-import { speak } from "../Activities";
+import {
+  speak,
+  cancelSpeech,
+  spellingInstruction,
+  wordStimulus,
+} from "../speech";
+import { ReadAloud } from "../ReadAloud";
+import { ComboBadge } from "../ComicBurst";
+import { celebrate, recordAnswer, clearEffects } from "../Effects";
+import { useModalFocus } from "../useModalFocus";
 import type {
   PracticeMode,
   PracticeItem,
@@ -108,15 +117,19 @@ export function WeeklyHQ({
   change,
   onGeneral,
   onManage,
+  autoResume = false,
 }: {
   state: State;
   change: Change;
   onGeneral: () => void;
   onManage: () => void;
+  autoResume?: boolean;
 }) {
   const data = weeklyData(state),
     list = data.lists.find((l) => l.id === data.activeListId && !l.archived);
-  const [viewId, setViewId] = useState<string | null>(null);
+  const [viewId, setViewId] = useState<string | null>(() =>
+    autoResume ? (data.current?.id ?? null) : null,
+  );
   function start(mode: PracticeMode) {
     if (!list) return;
     const next = beginPractice(state, list.id, mode);
@@ -153,10 +166,14 @@ export function WeeklyHQ({
       : "mixed";
   return (
     <>
+      <ReadAloud
+        settings={state.settings}
+        text="Choose a training mode for your school words. Flashcards help you study. Word Builder helps you build words. A practice test shows results at the end."
+      />
       <header className="page-title">
         <div>
           <p className="eyebrow">HERO ACADEMY · SECRET CODE DIVISION</p>
-          <h1>Spelling HQ</h1>
+          <h1 tabIndex={-1}>Spelling HQ</h1>
           <p>Your school words. Your next superpower.</p>
         </div>
         <button className="secondary" onClick={onGeneral}>
@@ -284,13 +301,13 @@ export function WeeklyHQ({
               </button>
             ))}
           </div>
-          <section className="panel weekly-words">
-            <div className="section-heading">
-              <h2>This week’s words</h2>
+          <details className="panel weekly-words">
+            <summary>
+              This week’s words{" "}
               <span>
                 {difficult} tricky · {mastered} mastered
               </span>
-            </div>
+            </summary>
             <div className="weekly-word-grid">
               {list.words.map((w) => {
                 const p = wordProgress(data, w.text),
@@ -320,9 +337,9 @@ export function WeeklyHQ({
               adult-assisted turns help you learn. Only independent listening
               and test answers count toward mastery.
             </p>
-          </section>
-          <section className="panel weekly-history">
-            <h2>Previous practice tests</h2>
+          </details>
+          <details className="panel weekly-history">
+            <summary>Previous practice tests</summary>
             {data.results.filter(
               (r) => r.listId === list.id && r.mode === "test",
             ).length ? (
@@ -344,7 +361,7 @@ export function WeeklyHQ({
             ) : (
               <p>Your completed practice-test results will appear here.</p>
             )}
-          </section>
+          </details>
         </>
       )}
     </>
@@ -366,6 +383,7 @@ function PracticeSession({
   const data = weeklyData(state),
     session = data.current?.id === sessionId ? data.current : null,
     result = data.results.find((r) => r.id === sessionId);
+  const [combo, setCombo] = useState(0);
   const [feedback, setFeedback] = useState<{
     result: WordResult;
     test: boolean;
@@ -377,6 +395,14 @@ function PracticeSession({
     },
     [],
   );
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    document
+      .querySelector<HTMLElement>(
+        ".weekly-turn h1, .weekly-feedback h1, .weekly-results h1",
+      )
+      ?.focus({ preventScroll: true });
+  }, [session?.index, !!feedback, result?.id]);
   if (feedback)
     return (
       <div className="focused weekly-session">
@@ -384,7 +410,7 @@ function PracticeSession({
           <p className="eyebrow">
             {feedback.test ? "TRANSMISSION SAVED" : "TRAINING REPORT"}
           </p>
-          <h1>
+          <h1 tabIndex={-1}>
             {feedback.test
               ? "Answer saved."
               : feedback.result.kind === "recognition"
@@ -403,7 +429,26 @@ function PracticeSession({
               <div className="study-word">{feedback.result.word}</div>
             </>
           )}
-          <button className="primary" onClick={() => setFeedback(null)}>
+          <ComboBadge streak={combo} />
+          <ReadAloud
+            settings={state.settings}
+            text={
+              feedback.test
+                ? "Answer saved. Tap Next word to continue."
+                : feedback.result.correct
+                  ? "Well done. Tap Next word to continue, or see your session results."
+                  : "Good effort. Look at the word, then tap Next word. You can review it later."
+            }
+          />
+          <button
+            className="primary"
+            onClick={() => {
+              clearEffects();
+              cancelSpeech();
+              if (feedback.last) celebrate("victory");
+              setFeedback(null);
+            }}
+          >
             {feedback.last
               ? feedback.test
                 ? "See test results"
@@ -420,8 +465,12 @@ function PracticeSession({
     return (
       <div className="weekly-results">
         <section className="panel celebration">
+          <ReadAloud
+            settings={state.settings}
+            text="Training complete. Your word report is below. Tap Back to Spelling HQ or review missed words."
+          />
           <p className="eyebrow">HERO TRAINING REPORT</p>
-          <h1>
+          <h1 tabIndex={-1}>
             {result.mode === "test"
               ? "Practice test complete!"
               : "Training complete!"}
@@ -488,18 +537,27 @@ function PracticeSession({
           : item.mode === "test"
             ? "test"
             : "independent";
-    setFeedback({
-      test: session.mode === "test",
-      last: session.index === session.items.length - 1,
-      result: {
-        word: item.word.text,
-        answer: value,
-        correct,
-        kind,
-        at: Date.now(),
-      },
-    });
+    const finalTest =
+      session.mode === "test" && session.index === session.items.length - 1;
+    setFeedback(
+      finalTest
+        ? null
+        : {
+            test: session.mode === "test",
+            last: session.index === session.items.length - 1,
+            result: {
+              word: item.word.text,
+              answer: value,
+              correct,
+              kind,
+              at: Date.now(),
+            },
+          },
+    );
     change((s) => submitTurn(s, session.id, session.index, value, assisted));
+    if (finalTest) celebrate("victory");
+    else if (session.mode !== "test" && item.mode !== "flashcards")
+      setCombo(recordAnswer(correct));
   }
   return (
     <div className="focused weekly-session">
@@ -594,6 +652,8 @@ function SpellingTurn({
   function send() {
     if (locked.current) return;
     locked.current = true;
+    cancelSpeech();
+    clearEffects();
     onAnswer(
       mode === "flashcards"
         ? word
@@ -605,19 +665,20 @@ function SpellingTurn({
   }
   const hear = () =>
     setSpeechNote(
-      speak(
-        [word, item.word.sentence, word].filter(Boolean).join(". "),
-        state.settings.sound,
-      ),
+      speak(wordStimulus(mode, word, item.word.sentence), state.settings),
     );
   return (
     <section className="panel weekly-turn">
+      <ReadAloud
+        settings={state.settings}
+        text={spellingInstruction(mode, covered)}
+      />
       <p className="eyebrow">
         {isIndependent
           ? "SECRET TRANSMISSION · LISTEN CAREFULLY"
           : "SECRET CODE TRAINING"}
       </p>
-      <h1>
+      <h1 tabIndex={-1}>
         {mode === "flashcards"
           ? "Meet your secret code."
           : mode === "builder"
@@ -659,6 +720,7 @@ function SpellingTurn({
           <button
             className="primary"
             onClick={() => {
+              cancelSpeech();
               setCovered(true);
               setValue("");
             }}
@@ -868,10 +930,7 @@ function ReadingCard({
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    dialog.current?.showModal();
-    return () => dialog.current?.close();
-  }, []);
+  useModalFocus(dialog);
   return (
     <dialog
       ref={dialog}

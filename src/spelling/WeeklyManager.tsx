@@ -68,7 +68,10 @@ export function WeeklyManager({
     }
   }
   return (
-    <section className="panel custom-panel weekly-management">
+    <section
+      className="panel custom-panel weekly-management"
+      id="adult-spelling"
+    >
       <div className="section-heading">
         <h2>
           <BookOpenCheck /> Weekly Spelling Lists

@@ -54,7 +54,7 @@ Vendored code: `public/games/racer/common.js` and `race.js`, adapted from `commo
 - Lucide React icons — Lucide Contributors, ISC (with Feather-derived icons under MIT). Package license/notice preserved by npm; icon license reproduced below.
 - Vite, TypeScript, Vitest, ESLint, typescript-eslint, Playwright and build/test dependencies retain their package licenses. See each installed package’s LICENSE/NOTICE files and package-lock.json for exact versions. They are development tools unless bundled into runtime by the build.
 
-The city key art was generated specifically for Hero Academy with the built-in image-generation tool. The exact prompt and provenance are in `public/art/ATTRIBUTION.md`; it depicts an original masked grappling hero, with no Marvel logos, Spider-Man costume, or other protected franchise assets. V2 game previews are screenshots captured from actual play of the imported MIT/CC0 games, and retain those underlying notices. Mission badges, fallback preview graphics, questions and reading passages were authored for Hero Academy. SVG assets are inline code. Device/system fonts and OS emoji are rendered by the browser; no font or emoji files are redistributed. No paid, downloaded, branded superhero, or copyrighted commercial game assets are used.
+The city key art was generated specifically for Hero Academy with the built-in image-generation tool. The exact prompt and provenance are in `public/art/ATTRIBUTION.md`; it depicts an original masked grappling hero, with no Marvel logos, Spider-Man costume, or other protected franchise assets. V2 game previews are screenshots captured from actual play of the imported MIT/CC0 games, and retain those underlying notices. Mission badges, fallback preview graphics, questions and reading passages were authored for Hero Academy. SVG assets are inline code. Body text uses device/system fonts and OS emoji. V4 additionally redistributes Bangers for menu/display text under SIL OFL 1.1; the full notice is included in public/fonts/Bangers-OFL.txt. No emoji files are redistributed. No paid, downloaded, branded superhero, or copyrighted commercial game assets are used.
 
 ## Referenced repositories investigated
 
@@ -91,3 +91,20 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+## V4 presentation assets and tool selection (November 25, 2026)
+
+- **Bangers** — Copyright 2010 The Bangers Project Authors (https://github.com/googlefonts/bangers). SIL Open Font License 1.1; full license is distributed at `public/fonts/Bangers-OFL.txt`. Source downloaded from https://github.com/google/fonts/tree/main/ofl/bangers on November 25, 2026. The original TTF was losslessly repackaged as WOFF2 (`public/fonts/Bangers-Regular.woff2`); glyph outlines were not edited. Used for display/menu text only; instructions and grown-up forms use conventional system fonts.
+- **Original V4 key art** — generated using the built-in OpenAI image tool, stored locally as `public/art/multiverse-city.webp`. Full prompt and provenance: `public/art/ATTRIBUTION.md`. Supplied copyrighted reference images are not shipped.
+- **Original effects** — `src/Effects.tsx` and `src/v4.css` implement finite SVG/CSS impact, fire pulse, lightning, star travel, confetti, portrait reaction and locally synthesized audio. No animation/effect library source was copied and no new runtime dependency was installed.
+- React Bits, Motion, Paper Shaders, Aceternity UI, Magic UI, Effekseer, tsParticles, Canvas Confetti, Kenney, Blender, Sloyd and Lucide were investigated. Findings, official source links, MCP/registry installation mechanisms and license distinctions are recorded in `docs/v4-tool-research.md`. React Bits currently includes Commons Clause conditions alongside MIT; Sloyd free access is not a blanket open-source or commercial redistribution license. Neither was imported.
+
+## V4.1 presentation, sound and speech (November 25, 2026)
+
+The comic explosion paths, ink splashes, halftone patterns, lettering compositions, feedback policy and finite CSS animations in `src/ComicBurst.tsx`, `feedback.ts`, `Effects.tsx` and `v41.css` are original project code. Attached commercial/fan-art sound-effect reference images are not redistributed. The local Bangers OFL font remains the display-lettering source; no additional font or raster asset was added.
+
+`src/audio.ts` contains original locally synthesized Web Audio recipes; there are no sampled third-party recordings, copied JFXR/Bfxr presets, downloaded sound packs or new runtime libraries. Howler/JFXR/Bfxr/Kenney and the previously investigated animation libraries were evaluated but not imported. Source links and decisions: `docs/v4-tool-research.md`.
+
+Existing MIT Super Kart source was modified to add an independent effects bus, preserve zero/quiet music volume during victory ducking, and accept host channel volumes. Its adapter and the MIT Galactic Patrol adapter now receive bounded volume settings; game bundles were rebuilt using the existing build scripts. Original upstream MIT/Three.js/Kenney notices remain distributed unchanged.
+
+Speech uses only browser-reported local English voices and does not redistribute voice files. Availability and pronunciation depend on the user's installed OS voices. No speech API, remote audio service or tracking was added.

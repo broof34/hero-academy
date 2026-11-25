@@ -23,6 +23,8 @@ addEventListener("message", (e) => {
   if (e.source !== parent || e.data?.type !== "academy:settings") return;
   const data = e.data;
   parentMuted = data.muted !== false;
+  api.audio.setEffectsVolume(typeof data.effectsVolume === "number" && Number.isFinite(data.effectsVolume) ? Math.max(0, Math.min(1, data.effectsVolume)) : 1);
+  api.audio.setMusicVolume(typeof data.musicVolume === "number" && Number.isFinite(data.musicVolume) ? Math.max(0, Math.min(1, data.musicVolume)) : 0);
   originalMute(parentMuted);
   if (typeof data.paused === "boolean") pause(data.paused);
   window.academyReducedMotion = data.reducedMotion === true;

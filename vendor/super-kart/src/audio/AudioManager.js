@@ -51,6 +51,8 @@ export class AudioManager {
   constructor() {
     this._ctx = null;
     this._master = null;
+    this._effects = null;
+    this._effectsVolume = 1;
     this._volume = CONFIG.audio.masterVolume;
     this._musicVolume = CONFIG.audio.musicVolume;
     this._engineVolume = CONFIG.audio.engineVolume;
@@ -118,6 +120,10 @@ export class AudioManager {
     this._ctx = new Ctx();
     this._master = this._ctx.createGain();
     this._master.gain.value = this._muted ? 0 : this._volume;
+    // Hero Academy V4.1: independent effects bus; music still feeds the master.
+    this._effects = this._ctx.createGain();
+    this._effects.gain.value = this._effectsVolume;
+    this._effects.connect(this._master);
 
     // --- EQ (subtractive + low-end body + presence) ---------------------
     const eq = this._ctx.createBiquadFilter();
@@ -310,7 +316,7 @@ export class AudioManager {
       volume *= Math.max(0, 12 / (12 + d));
     }
     const resolved = this._resolveSfxName(name, { volume, rate, pan, delay });
-    renderSfx(this._ctx, this._master, resolved.name, {
+    renderSfx(this._ctx, this._effects, resolved.name, {
       ...opts,
       volume,
       rate,
@@ -619,7 +625,7 @@ export class AudioManager {
     } else {
       gain.connect(distGain); // no panner support — distance only
     }
-    distGain.connect(this._master);
+    distGain.connect(this._effects);
     base.start();
     oct.start();
     sub.start();
@@ -787,7 +793,7 @@ export class AudioManager {
     bp.connect(gain);
     bp2.connect(g2);
     g2.connect(gain);
-    gain.connect(this._master);
+    gain.connect(this._effects);
     src.start();
     lfo.start();
     this._crowd = { src, bp, bp2, gain, lfo };
@@ -839,6 +845,12 @@ export class AudioManager {
 
   /* ---------------- Volume ---------------- */
 
+  /** Hero Academy: effects volume excludes the procedural music bus. */
+  setEffectsVolume(v) {
+    this._effectsVolume = Math.max(0, Math.min(1, v));
+    if (this._effects && this._ctx) this._effects.gain.setTargetAtTime(this._effectsVolume, this._ctx.currentTime, 0.02);
+  }
+
   /** Sets the master volume (0..1), smoothed to avoid clicks. */
   setMasterVolume(v) {
     this._volume = Math.max(0, Math.min(1, v));
@@ -886,7 +898,7 @@ export class AudioManager {
    *  corridas seguintes começavam em volume cheio; e duckMusic(1,...) era o
    *  OPOSTO — levantava a música a 100% no momento mais saturado). */
   duckMusic(v, ms) {
-    const target = Math.min(1, Math.max(0.1, this._musicVolume * v));
+    const target = Math.max(0, Math.min(this._musicVolume, this._musicVolume * v));
     if (this._music) this._music.setVolume(target);
     if (this._menuMusic) this._menuMusic.setVolume(target * 0.55);
     if (ms) {

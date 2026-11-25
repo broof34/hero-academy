@@ -47,6 +47,7 @@
     last = 0,
     frame = 0,
     muted = true,
+    effectsVolume = 1,
     audio;
   Game.muteMusic = true;
   Game.muteSFX = true;
@@ -94,7 +95,7 @@
     InPlay.enemyBullets = InPlay.enemyBullets.filter((b) => b.alive);
   };
   function beep() {
-    if (muted) return;
+    if (muted || effectsVolume === 0) return;
     try {
       audio ??= new AudioContext();
       if (audio.state === "suspended") void audio.resume().catch(() => {});
@@ -103,7 +104,7 @@
       o.type = "sine";
       o.frequency.setValueAtTime(650, audio.currentTime);
       o.frequency.exponentialRampToValueAtTime(180, audio.currentTime + 0.07);
-      g.gain.setValueAtTime(0.025, audio.currentTime);
+      g.gain.setValueAtTime(0.025 * effectsVolume, audio.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.07);
       o.connect(g).connect(audio.destination);
       o.start();
@@ -134,7 +135,7 @@
   start.onclick = begin;
   function syncAudio() {
     if (!audio) return;
-    if (muted || paused) void audio.suspend();
+    if (muted || paused || effectsVolume === 0) void audio.suspend();
     else void audio.resume().catch(() => {});
   }
   function setPaused(value) {
@@ -262,6 +263,7 @@
   addEventListener("message", (e) => {
     if (e.source !== parent || e.data?.type !== "academy:settings") return;
     muted = e.data.muted !== false;
+    effectsVolume = typeof e.data.effectsVolume === "number" && Number.isFinite(e.data.effectsVolume) ? Math.max(0, Math.min(1, e.data.effectsVolume)) : 1;
     if (typeof e.data.paused === "boolean") setPaused(e.data.paused);
     syncAudio();
   });

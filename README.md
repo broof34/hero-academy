@@ -1,4 +1,4 @@
-# Hero Academy V3
+# Hero Academy V4.1: Multiverse Edition
 
 A first-grade learning adventure with short missions, encouraging retries, effort rewards, an original comic-book superhero interface, and an earned arcade. React + Vite + TypeScript + plain CSS. No backend, account, subscription, advertising, or analytics.
 
@@ -25,7 +25,7 @@ npm run preview
 1. Start a five-question math, spelling, or reading mission. Choose a specific skill or a mix.
 2. Each solved question earns **one star**. Mistakes cost nothing. Hints and retries are always available; there is no response deadline.
 3. In Arcade, exchange **10 stars for a ticket** by default. Choose a game and read its control briefing; no ticket is spent while browsing. **Launch game** spends one ticket and starts a **three-minute** session. A visible countdown warns during the final 30 seconds. At zero, the iframe is removed and the dashboard returns.
-4. Open **Grown-up zone** (sidebar on desktop/tablet, shield button in the mobile header) and solve the multiplication check to edit subjects, math difficulty, stars per ticket, focus/break/game durations, speech, and reduced motion. At least one subject stays enabled.
+4. Open **Grown-ups** in the main navigation and solve the multiplication check to edit subjects, math difficulty, stars per ticket, focus/break/game durations, speech, and reduced motion. At least one subject stays enabled.
 5. Add custom math/spelling prompts and their exact answers; choose **My grown-up’s questions** in a new mission. Answers ignore leading/trailing spaces and letter case.
 6. Homework supports focus, pause/resume, adult-confirmed effort, and a non-screen break. An adult can also reward persistence before the timer ends. A focus round awards three stars once, then enters break time.
 7. Export progress as JSON before clearing browser data. Reset requires a separate explicit confirmation.
@@ -34,7 +34,7 @@ The grown-up check is a friendly gate, **not a secure parental control**. Browse
 
 ## Weekly spelling (V3)
 
-In **Grown-up zone → Weekly Spelling Lists**, name a list, paste comma/newline-separated words, and optionally set its test date. Edit individual words and example sentences, choose the active week, archive/reuse lists, and inspect mastery, commonly missed words and recent practice results. Export a spelling list as JSON and import it on another device; this transfers words, sentences and date only, never rewards or learning evidence. Full progress export remains available separately.
+In **Grown-ups → Weekly Spelling Lists**, name a list, paste comma/newline-separated words, and optionally set its test date. Edit individual words and example sentences, choose the active week, archive/reuse lists, and inspect mastery, commonly missed words and recent practice results. Export a spelling list as JSON and import it on another device; this transfers words, sentences and date only, never rewards or learning evidence. Full progress export remains available separately.
 
 **Spelling HQ** offers Flashcards, Word Builder, Missing Letters, Look/Cover/Spell/Check, Listen and Spell, Practice Test, Tricky Word Review, and Mixed Training. The existing general spelling missions remain separate. Every school word generates its own activities, including repeated letters, accents, spaces, apostrophes and hyphens. Use physical keys, large screen keys or indexed letter tiles.
 
@@ -94,13 +94,13 @@ The application does not import Three.js into its own runtime. The approximately
 
 ## Deployment
 
-GitHub Actions validates pushes to `codex/hero-academy-v3`; **deployment requires a manual workflow dispatch after validation**. This keeps the previous live version safe during development. Select “Validate and deploy Hero Academy” → “Run workflow” → `codex/hero-academy-v3`, or:
+GitHub Actions validates pushes to `codex/hero-academy-v3` and `codex/hero-academy-v4`; **deployment requires a manual workflow dispatch after validation**. This keeps the previous live version safe during development. Select “Validate and deploy Hero Academy” → “Run workflow” → `codex/hero-academy-v4`, or:
 
 ```sh
-gh workflow run pages.yml --ref codex/hero-academy-v3
+gh workflow run pages.yml --ref codex/hero-academy-v4
 ```
 
-Repository Settings → Pages must use **GitHub Actions**. The `github-pages` environment must allow the V3 branch. `vite.config.ts` retains base `/hero-academy/`. Source game bundles are rebuilt and verified against the committed distribution in CI.
+Repository Settings → Pages must use **GitHub Actions**. The `github-pages` environment must allow the V4 branch. `vite.config.ts` retains base `/hero-academy/`. Source game bundles are rebuilt and verified against the committed distribution in CI.
 
 ## Privacy, storage, and limits
 
@@ -114,3 +114,40 @@ Repository Settings → Pages must use **GitHub Actions**. The `github-pages` en
 ## Licensing
 
 Original code, content, and SVG illustrations: MIT. See public/art/ATTRIBUTION.md for key-art generation provenance and gameplay screenshot credits. Third-party notices, source revisions, changes, and the repository investigation are documented in [THIRD_PARTY.md](THIRD_PARTY.md). Preserved full notices are in `public/games/*/LICENSE.txt`, `vendor/*/LICENSE` and `public/licenses/`.
+
+## V4 illustrated interface
+
+Home, Learn, Arcade, Rewards and Grown-ups are the five main destinations. Home uses original punk-comic key art, angled halftone subject panels and a single Continue learning action. Resume learning returns directly to a saved weekly spelling activity. General spelling and weekly Spelling HQ remain separate; Learn also includes Homework and screen-free breaks. Rewards exchanges the existing stars/tickets using unchanged safeguards. Grown-ups keeps conventional type and forms, with direct section links.
+
+Correct answers trigger short comic impacts and stars flying toward the balance. Three first-attempt successes in a row add a brief flame pulse; this is a visual effect, not a new score. Completion and ticket exchange get finite electricity/confetti and an original hero portrait reaction. Weekly tests never show correctness effects before results. Both OS and saved reduced-motion preferences suppress decorative motion. The existing sound toggle now also controls quiet locally synthesized celebration tones; sound remains off by default. The final spelling-test answer opens its completed report immediately so the saved reward cannot reveal correctness ahead of the report. Supporting HQ word/history sections are collapsible; dialogs restore keyboard focus and long list names wrap on narrow screens.
+
+All new art and fonts are local. No new runtime packages, tracking, network service or save migration was added. The app remains a static GitHub Pages site. Art provenance and the local Bangers font license are documented in `public/art/ATTRIBUTION.md`, `public/fonts/Bangers-OFL.txt` and `THIRD_PARTY.md`. Research: `docs/v4-tool-research.md`.
+
+To reproduce the desktop/tablet/mobile visual capture using the development server on port 5174:
+
+```sh
+npm run dev -- --port 5174
+HERO_REVIEW_DIR=/tmp/hero-academy-v4-review node scripts/review-v4.mjs
+```
+
+The capture script checks browser errors, failed local assets and horizontal overflow. Optional `HERO_AXE_PATH=/absolute/path/to/axe.min.js` enables a locally injected axe-core accessibility audit; axe is a review tool and is not included in the application runtime.
+
+## V4.1 — Visual polish, sound design and usability
+
+Correct answers now use original vector comic bursts with halftone shading, heavy ink outlines and varied lettering. Three consecutive first-attempt practice successes trigger fire, five electricity and ten a larger celebration. This is an ephemeral practice streak across existing activities, not another currency or stored assessment metric; mistakes reset it without losing stars, tests do not update it, and reloading resets it. Advancing clears old effects. Progress bars and press states animate briefly, with both reduced-motion preferences honored.
+
+The header's **Audio settings** opens an independent effects, kart music and spoken-instruction mixer. Master mute preserves the selected channels. Volume, speech speed, automatic instructions and spoken encouragement save locally. The grown-up form uses the same live audio preferences; saving learning settings does not overwrite them. Kart music is independently muted by default. The game's own mute/pause controls remain available in a session.
+
+Speaker buttons replay menu/activity instructions, math questions, reading passages, homework/break guidance and game briefings. Optional auto-read uses an installed local English voice; it stays silent while dialogs are open or the page is hidden. It never automatically reads a hidden spelling word/sentence. **Hear word** deliberately speaks the dictation target; study/builder modes may include its example sentence, while test/listen/cover/missing modes do not. If no local voice exists, the page offers a clear message and existing adult reading assistance remains available.
+
+New modules: `src/ComicBurst.tsx`, `feedback.ts`, `audio.ts`, `speech.ts`, `ReadAloud.tsx`, `AudioControls.tsx`, `useAudio.ts` and `v41.css`. No new runtime package or service was added. Version-1 saves hydrate new settings with safe defaults; old sound-enabled saves retain both speech and effects.
+
+Review tools:
+
+```sh
+HERO_TEST_URL=http://127.0.0.1:5176/hero-academy/ npm run test:e2e
+HERO_REVIEW_DIR=/tmp/hero-academy-v41-review node scripts/record-v41.mjs
+HERO_REVIEW_DIR=/tmp/hero-academy-v41-review node scripts/sample-audio-v41.mjs
+```
+
+The first command targets a running production preview. The recording script captures real Chrome frames through two five-question activities; the audio sampler uses the actual exported synthesis recipes in an OfflineAudioContext and requires the development server on port 5174. Review media stays outside public assets.

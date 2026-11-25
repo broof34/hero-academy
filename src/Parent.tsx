@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useModalFocus } from "./useModalFocus";
+import { AudioFields } from "./AudioControls";
 import { WeeklyManager } from "./spelling/WeeklyManager";
 import { Check, Download, Plus, Trash2, ShieldCheck, X } from "lucide-react";
 import {
@@ -22,10 +24,7 @@ export function AdultGate({
   confirmLabel?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    dialog.current?.showModal();
-    return () => dialog.current?.close();
-  }, []);
+  useModalFocus(dialog);
   const [a] = useState(() => Math.floor(Math.random() * 4) + 6),
     [b] = useState(() => Math.floor(Math.random() * 4) + 6);
   const [answer, setAnswer] = useState(""),
@@ -138,17 +137,20 @@ export function Parent({
       <header className="page-title">
         <div>
           <p className="eyebrow">GROWN-UP ZONE</p>
-          <h1>A little support. Big possibilities.</h1>
-          <p>
-            Make the academy work for your learner. Everything stays in this
-            browser.
-          </p>
+          <h1>Grown-up dashboard</h1>
+          <p>Learning settings, spelling lists, and saved progress.</p>
         </div>
         <ShieldCheck size={42} />
       </header>
+      <nav className="adult-jumps" aria-label="Grown-up sections">
+        <a href="#adult-settings">Learning & rewards</a>
+        <a href="#adult-spelling">Spelling lists</a>
+        <a href="#adult-progress">Progress</a>
+        <a href="#adult-data">Export & reset</a>
+      </nav>
       <div className="parent-grid">
         <WeeklyManager state={state} change={change} />
-        <section className="panel">
+        <section className="panel" id="adult-settings">
           <h2>Learning & rewards</h2>
           <fieldset>
             <legend>Learning subjects</legend>
@@ -191,16 +193,13 @@ export function Parent({
             {numeric("focusMinutes", "Focus minutes", 1, 60)}
             {numeric("breakMinutes", "Break minutes", 1, 30)}
           </div>
-          <label className="check-label">
-            <input
-              type="checkbox"
-              checked={settings.sound}
-              onChange={(e) =>
-                setSettings({ ...settings, sound: e.target.checked })
-              }
+          <details className="adult-audio">
+            <summary>Sound & read aloud</summary>
+            <AudioFields
+              settings={state.settings}
+              onChange={(patch) => change((s) => updateSettings(s, patch))}
             />
-            Enable spoken instructions (local device voice)
-          </label>
+          </details>
           <label className="check-label">
             <input
               type="checkbox"
@@ -214,7 +213,26 @@ export function Parent({
           <button
             className="primary"
             onClick={() => {
-              change((s) => updateSettings(s, settings));
+              const {
+                subjects,
+                difficulty,
+                starCost,
+                gameMinutes,
+                focusMinutes,
+                breakMinutes,
+                reducedMotion,
+              } = settings;
+              change((s) =>
+                updateSettings(s, {
+                  subjects,
+                  difficulty,
+                  starCost,
+                  gameMinutes,
+                  focusMinutes,
+                  breakMinutes,
+                  reducedMotion,
+                }),
+              );
               onDone();
             }}
           >
@@ -226,7 +244,7 @@ export function Parent({
           </p>
         </section>
         <div className="stack">
-          <section className="panel">
+          <section className="panel" id="adult-progress">
             <h2>Look at that progress</h2>
             {(["math", "spelling", "reading"] as Subject[]).map((sub) => {
               const v = state.stats[sub];
@@ -273,7 +291,7 @@ export function Parent({
               {notice}
             </p>
           </section>
-          <section className="panel">
+          <section className="panel" id="adult-data">
             <h2>Your browser, your data</h2>
             <p>
               No account, ads, or tracking. Progress is saved on this device.

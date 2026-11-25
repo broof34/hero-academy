@@ -2,21 +2,26 @@ import { useEffect, useState } from "react";
 import {
   Zap,
   House,
-  Rocket,
+  BookOpen,
   Gamepad2,
-  Timer,
   Star,
   Ticket,
   ShieldCheck,
   Volume2,
   VolumeX,
   Sparkles,
-  Check,
-  LockKeyhole,
-  Coffee,
   Trophy,
-  BookOpenCheck,
+  Settings,
+  Coffee,
+  SlidersHorizontal,
 } from "lucide-react";
+import { HomeMenu, LearnMenu, Rewards } from "./Menu";
+import { AudioDialog } from "./AudioControls";
+import { useAudio } from "./useAudio";
+import { ReadAloud } from "./ReadAloud";
+import { updateSettings } from "./model";
+import { cancelSpeech } from "./speech";
+import { EffectLayer, celebrate } from "./Effects";
 import {
   freshState,
   hydrate,
@@ -28,12 +33,10 @@ import {
   type GameId,
 } from "./model";
 import { makeQuestion, type Question } from "./learning";
-import { MissionArt } from "./Art";
 import { AdultGate, Parent, exportFile } from "./Parent";
 import { SkillChooser, Mission, Homework, BreakTime } from "./Activities";
 import { games } from "./games";
 import { WeeklyHQ } from "./spelling/WeeklyHQ";
-import { weeklyData } from "./spelling/engine";
 import { GameBriefing, GamePreview, GameSession } from "./Arcade";
 function load() {
   try {
@@ -57,22 +60,11 @@ function load() {
     };
   }
 }
-const subjects: Subject[] = ["math", "spelling", "reading"];
-const labels = { math: "Math", spelling: "Spelling", reading: "Reading" };
-const descriptions = {
-  math: "Small numbers. Super powers.",
-  spelling: "Build words. Unlock possibilities.",
-  reading: "Big adventures in little stories.",
-};
-const names = {
-  math: "Number Ops",
-  spelling: "Word Lab",
-  reading: "Story Files",
-};
 type Screen =
   | "home"
   | "spelling-hq"
   | "missions"
+  | "rewards"
   | "briefing"
   | "arcade"
   | "homework"
@@ -85,12 +77,20 @@ export default function App() {
   const [loaded] = useState(load);
   const [state, setState] = useState<State>(loaded.state),
     [storageError, setStorageError] = useState(loaded.error);
+  const [audioOpen, setAudioOpen] = useState(false);
+  const [savedNotice, setSavedNotice] = useState(false);
+  const [resumeWeekly, setResumeWeekly] = useState(false);
   const [selectedGame, setSelectedGame] = useState<GameId>("racer");
   const [screen, setScreen] = useState<Screen>("home"),
     [subject, setSubject] = useState<Subject>("math"),
     [questions, setQuestions] = useState<Question[]>([]),
     [gate, setGate] = useState(false),
     [message, setMessage] = useState("");
+  useAudio(
+    state.settings,
+    !!state.session || gate || screen === "parent",
+    screen,
+  );
   useEffect(() => {
     if (loaded.error) return;
     try {
@@ -110,8 +110,17 @@ export default function App() {
   }, [state.settings.reducedMotion]);
   useEffect(() => {
     window.scrollTo({ top: 0 });
-    if ("speechSynthesis" in window) speechSynthesis.cancel();
-  }, [screen]);
+    const frame = requestAnimationFrame(() => {
+      const main = document.getElementById("main-content");
+      // Preserve auto-focused spelling fields when resuming a saved session.
+      if (
+        !main?.contains(document.activeElement) ||
+        !document.activeElement?.matches("input, textarea, select")
+      )
+        main?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [screen, !!state.session]);
   function navigate(to: Screen) {
     setScreen(to);
     setMessage("");
@@ -139,14 +148,6 @@ export default function App() {
     navigate("mission");
   }
   const starsNeeded = Math.max(0, state.settings.starCost - state.stars);
-  const ticketProgress = Math.min(
-    100,
-    (state.stars / state.settings.starCost) * 100,
-  );
-  const totalSolved = subjects.reduce(
-    (sum, s) => sum + state.stats[s].correct,
-    0,
-  );
   if (loaded.error)
     return (
       <main className="recovery panel">
@@ -180,133 +181,145 @@ export default function App() {
     );
   return (
     <div className={`app-shell ${state.session ? "is-playing" : ""}`}>
-      <aside className="sidebar">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      <header className="game-header">
         <button
-          className="brand"
+          className="punk-brand"
           onClick={() => navigate("home")}
           aria-label="Hero Academy home"
         >
-          <span className="brand-mark">
-            <Zap fill="currentColor" size={26} />
-          </span>
-          <span>
-            HERO<span className="brand-sub">ACADEMY</span>
-          </span>
+          <span>HERO</span>
+          <strong>ACADEMY</strong>
+          <small>MULTIVERSE EDITION</small>
         </button>
-        <div className="sidebar-caption">COMMAND CENTER</div>
-        <nav aria-label="Main navigation">
+        <nav className="primary-nav" aria-label="Main navigation">
           {(
             [
-              { id: "home", label: "Your base", icon: House },
-              { id: "missions", label: "Missions", icon: Rocket },
-              { id: "spelling-hq", label: "Spelling HQ", icon: BookOpenCheck },
+              { id: "home", label: "Home", icon: House },
+              { id: "missions", label: "Learn", icon: BookOpen },
               { id: "arcade", label: "Arcade", icon: Gamepad2 },
-              { id: "homework", label: "Homework", icon: Timer },
+              { id: "rewards", label: "Rewards", icon: Trophy },
+              { id: "parent", label: "Grown-ups", icon: Settings },
             ] as const
-          )
-            .filter(
-              (n) =>
-                n.id !== "spelling-hq" ||
-                state.settings.subjects.includes("spelling"),
-            )
-            .map((n) => (
+          ).map((n) => {
+            const active =
+              n.id === screen ||
+              (n.id === "missions" &&
+                ["choose", "mission", "complete", "homework", "break"].includes(
+                  screen,
+                )) ||
+              (n.id === "arcade" && (screen === "briefing" || !!state.session));
+            return (
               <button
                 key={n.id}
-                className={screen === n.id ? "active" : ""}
-                onClick={() => navigate(n.id)}
+                className={active ? "active" : ""}
+                aria-current={active ? "page" : undefined}
+                onClick={() =>
+                  n.id === "parent" ? setGate(true) : navigate(n.id)
+                }
               >
-                <n.icon size={21} />
+                <n.icon aria-hidden="true" />
                 <span>{n.label}</span>
-                {screen === n.id && <i />}
               </button>
-            ))}
+            );
+          })}
         </nav>
-        <div className="sidebar-bottom">
-          <div className="hero-reminder">
-            <div className="tiny-star">✦</div>
-            <strong>
-              Little steps.
-              <br />
-              Super things.
-            </strong>
-            <p>
-              You don’t have to be perfect.
-              <br />
-              Just give it a try.
-            </p>
+        <div className="header-balances">
+          <div className="balance" aria-label={`${state.stars} stars`}>
+            <Star fill="currentColor" />
+            <strong data-testid="star-balance">{state.stars}</strong>
+          </div>
+          <div
+            className="ticket-balance"
+            aria-label={`${state.tickets} game tickets`}
+          >
+            <Ticket />
+            <strong>{state.tickets}</strong>
           </div>
           <button
-            className="parent-nav"
-            aria-label="Grown-up zone"
-            onClick={() => setGate(true)}
-          >
-            <ShieldCheck size={19} /> Grown-up zone <LockKeyhole size={13} />
-          </button>
-          <small>Made for curious little heroes.</small>
-        </div>
-      </aside>
-      <div className="main-shell">
-        <header className="topbar">
-          <div className="breadcrumb">
-            Hero Academy <span>/</span>{" "}
-            <strong>
-              {screen === "home"
-                ? "Your base"
-                : screen === "parent"
-                  ? "Grown-up zone"
-                  : screen === "arcade"
-                    ? "Arcade"
-                    : screen === "homework"
-                      ? "Homework"
-                      : "Your adventure"}
-            </strong>
-          </div>
-          <div className="topbar-actions">
-            <div className="balance">
-              <Star size={19} fill="currentColor" />
-              <strong data-testid="star-balance">{state.stars}</strong>
-              <span>stars</span>
-            </div>
-            <div
-              className="ticket-balance"
-              aria-label={`${state.tickets} game tickets`}
-            >
-              <Ticket size={19} />
-              <strong>{state.tickets}</strong>
-            </div>
-            <button
-              className="icon-button"
-              aria-label={
-                state.settings.sound ? "Turn sound off" : "Turn sound on"
-              }
-              onClick={() => {
-                if (state.settings.sound && "speechSynthesis" in window)
-                  speechSynthesis.cancel();
-                setState((s) => ({
+            className="icon-button"
+            aria-label={
+              !state.settings.audioMuted &&
+              (state.settings.sound ||
+                state.settings.effectsSound ||
+                state.settings.musicSound)
+                ? "Turn sound off"
+                : "Turn sound on"
+            }
+            onClick={() => {
+              cancelSpeech();
+              setState((s) => {
+                const selected =
+                  s.settings.sound ||
+                  s.settings.effectsSound ||
+                  s.settings.musicSound;
+                const audible = selected && !s.settings.audioMuted;
+                return {
                   ...s,
-                  settings: { ...s.settings, sound: !s.settings.sound },
-                }));
-              }}
-            >
-              {state.settings.sound ? (
-                <Volume2 size={20} />
-              ) : (
-                <VolumeX size={20} />
-              )}
-            </button>
-            <button
-              className="icon-button mobile-parent"
-              aria-label="Grown-up zone"
-              onClick={() => setGate(true)}
-            >
-              <ShieldCheck size={20} />
-            </button>
-            <div className="avatar" aria-label="Hero profile">
-              ⚡
+                  settings: {
+                    ...s.settings,
+                    audioMuted: audible,
+                    ...(!selected ? { sound: true, effectsSound: true } : {}),
+                  },
+                };
+              });
+            }}
+          >
+            {!state.settings.audioMuted &&
+            (state.settings.sound ||
+              state.settings.effectsSound ||
+              state.settings.musicSound) ? (
+              <Volume2 />
+            ) : (
+              <VolumeX />
+            )}
+          </button>
+          <button
+            className="icon-button mix-button"
+            aria-label="Audio settings"
+            onClick={() => setAudioOpen(true)}
+          >
+            <SlidersHorizontal />
+          </button>
+        </div>
+      </header>
+      <div className="main-shell">
+        <main id="main-content" tabIndex={-1} className={`screen-${screen}`}>
+          {savedNotice && (
+            <div className="notice-banner" role="status">
+              Settings saved on this device.
+              <button
+                className="text-button"
+                onClick={() => setSavedNotice(false)}
+              >
+                Dismiss
+              </button>
             </div>
-          </div>
-        </header>
-        <main id="main-content">
+          )}
+          {!state.session &&
+            ["home", "missions", "arcade", "rewards", "complete"].includes(
+              screen,
+            ) && (
+              <ReadAloud
+                text={
+                  screen === "home"
+                    ? "Welcome to Hero Academy. Tap Continue learning, or choose Spelling, Math, Reading or Games."
+                    : screen === "missions"
+                      ? "Choose a subject to practice. Spelling HQ has your school words. Homework starts a focus timer."
+                      : screen === "arcade"
+                        ? "Choose a game to see how to play. You need one ticket to launch a game."
+                        : screen === "rewards"
+                          ? "Earn stars by practicing. Trade stars for a game ticket when it is ready."
+                          : screen === "complete"
+                            ? "Mission complete. Tap Back to base to choose your next activity."
+                            : "Choose a training mode for your school words. Tap Hear instructions in an activity for help."
+                }
+                settings={state.settings}
+                auto={screen !== "spelling-hq"}
+              />
+            )}
           {storageError && (
             <div className="warning" role="alert">
               {storageError}{" "}
@@ -331,234 +344,49 @@ export default function App() {
             />
           ) : (
             <>
-              {(screen === "home" || screen === "missions") && (
-                <>
-                  <header className="page-title">
-                    <div>
-                      <p className="eyebrow">YOUR HERO STORY STARTS HERE</p>
-                      <h1>
-                        {screen === "home"
-                          ? "Welcome to Hero HQ."
-                          : "Choose your next mission."}{" "}
-                        <span className="wave">
-                          {screen === "home" ? "✦" : ""}
-                        </span>
-                      </h1>
-                      <p>
-                        A little learning. A big adventure. Let’s see what you
-                        can do.
-                      </p>
-                    </div>
-                    <div className="grade-pill">
-                      <Sparkles size={16} /> FIRST-GRADE EXPLORER
-                    </div>
-                  </header>
-                  {screen === "home" && (
-                    <section className="hero-banner">
-                      <div className="hero-copy">
-                        <span className="banner-label">
-                          <span /> THE CITY NEEDS A HERO LIKE YOU
-                        </span>
-                        <h2>
-                          Small missions.
-                          <br />
-                          <em>Legendary heroes.</em>
-                        </h2>
-                        <p>
-                          Every skill is a superpower.
-                          <br />
-                          Train today. Unlock your next adventure.
-                        </p>
-                        <button
-                          className="banner-button"
-                          onClick={() => choose(state.settings.subjects[0])}
-                        >
-                          <Zap size={19} fill="currentColor" /> Start a mission
-                        </button>
-                        <span className="banner-footnote">
-                          Five questions. All the time you need.
-                        </span>
-                      </div>
-                      <img
-                        className="city-scene"
-                        src={import.meta.env.BASE_URL + "art/academy-city.jpg"}
-                        alt="An original masked hero swinging above a neon city skyline"
-                      />
-                      <span className="hero-orbit" />
-                    </section>
-                  )}
-                  {state.settings.subjects.includes("spelling") && (
-                    <section className="weekly-home-strip">
-                      <BookOpenCheck size={30} />
-                      <div>
-                        <p className="eyebrow">
-                          NEW TRANSMISSIONS · WEEKLY SPELLING
-                        </p>
-                        <h2>
-                          {weeklyData(state).lists.find(
-                            (l) => l.id === weeklyData(state).activeListId,
-                          )?.name ?? "Your school words. Your secret codes."}
-                        </h2>
-                        <p>
-                          Eight training modes, tricky-word review, and your own
-                          spelling test.
-                        </p>
-                      </div>
-                      <button
-                        className="secondary"
-                        onClick={() => navigate("spelling-hq")}
-                      >
-                        Open Spelling HQ
-                      </button>
-                    </section>
-                  )}
-                  <div className="dashboard-grid">
-                    <div className="dashboard-main">
-                      <div className="section-heading">
-                        <h2>
-                          <Rocket size={21} /> Choose your mission
-                        </h2>
-                        <span>Every try makes you stronger</span>
-                      </div>
-                      <div className="mission-cards">
-                        {state.settings.subjects.map((s) => (
-                          <article className={`mission-card ${s}`} key={s}>
-                            <div className="card-tag">
-                              {labels[s].toUpperCase()}
-                            </div>
-                            <MissionArt kind={s} />
-                            <h3>{names[s]}</h3>
-                            <p>{descriptions[s]}</p>
-                            <div className="mission-meta">
-                              <span>
-                                <Star size={14} fill="currentColor" /> 5 stars
-                                to earn
-                              </span>
-                              <span>5 questions</span>
-                            </div>
-                            <button
-                              aria-label={`Start ${labels[s]} mission`}
-                              onClick={() => choose(s)}
-                            >
-                              Let’s practice <Zap size={16} />
-                            </button>
-                          </article>
-                        ))}
-                      </div>
-                      <div className="section-heading arcade-heading">
-                        <h2>
-                          <Gamepad2 size={22} /> The reward arcade
-                        </h2>
-                        <button
-                          className="text-button"
-                          onClick={() => navigate("arcade")}
-                        >
-                          Visit arcade
-                        </button>
-                      </div>
-                      <div className="game-cards compact">
-                        {(Object.keys(games) as GameId[]).map((g) => (
-                          <article className="game-card" key={g}>
-                            <button
-                              className="game-preview-link"
-                              aria-label={`View ${games[g].title}`}
-                              onClick={() => play(g)}
-                            >
-                              <GamePreview game={g} />
-                            </button>
-                            <div className="game-card-info">
-                              <div>
-                                <h3>{games[g].title}</h3>
-                                <span>{games[g].tag}</span>
-                              </div>
-                              <span className="play-tag">
-                                <Ticket size={16} /> 1 ticket
-                              </span>
-                            </div>
-                          </article>
-                        ))}
-                      </div>
-                    </div>
-                    <aside className="dashboard-side">
-                      <section className="reward-panel panel">
-                        <div className="reward-icon">
-                          <Ticket size={29} />
-                          <span>✦</span>
-                        </div>
-                        <p className="eyebrow">YOUR NEXT REWARD</p>
-                        <h2>Your next unlock</h2>
-                        <p>
-                          Turn your learning stars into
-                          <br />a little arcade time.
-                        </p>
-                        <div className="reward-count">
-                          <strong>
-                            {Math.min(state.stars, state.settings.starCost)}
-                          </strong>
-                          <span>/ {state.settings.starCost} stars</span>
-                        </div>
-                        <div className="progress-track gold">
-                          <div style={{ width: `${ticketProgress}%` }} />
-                        </div>
-                        <p className="reward-note">
-                          {starsNeeded
-                            ? `Just ${starsNeeded} more stars to your next ticket!`
-                            : "You’ve earned enough for a game ticket!"}
-                        </p>
-                        <button
-                          className="secondary full"
-                          onClick={() => navigate("arcade")}
-                        >
-                          {starsNeeded
-                            ? "Explore rewards"
-                            : "Collect your ticket"}{" "}
-                          <Ticket size={17} />
-                        </button>
-                        <div className="session-note">
-                          <Timer size={15} />
-                          {state.settings.gameMinutes} minutes of play per
-                          ticket
-                        </div>
-                      </section>
-                      <section className="progress-panel panel">
-                        <div className="section-heading">
-                          <h3>Your hero journey</h3>
-                          <Trophy size={19} />
-                        </div>
-                        <div className="journey-stat">
-                          <strong>{totalSolved}</strong>
-                          <span>questions solved</span>
-                        </div>
-                        <div className="journey-stat">
-                          <strong>{state.totalStars}</strong>
-                          <span>stars earned, ever</span>
-                        </div>
-                        <div className="journey-message">
-                          <Check size={17} /> Every small step counts.
-                        </div>
-                      </section>
-                      <button
-                        className="break-card"
-                        onClick={() => navigate("break")}
-                      >
-                        <Coffee size={27} />
-                        <span>
-                          <strong>Need a little reset?</strong>
-                          <small>Stretch, breathe, recharge.</small>
-                        </span>
-                      </button>
-                    </aside>
-                  </div>
-                  <div className="bottom-note">
-                    <ShieldCheck size={16} /> A safe little corner of the
-                    universe. No ads. No accounts. Just learning.
-                  </div>
-                </>
+              {screen === "home" && (
+                <HomeMenu
+                  state={state}
+                  choose={choose}
+                  spelling={() => {
+                    setResumeWeekly(false);
+                    navigate("spelling-hq");
+                  }}
+                  arcade={() => navigate("arcade")}
+                  homework={() => navigate("homework")}
+                  takeBreak={() => navigate("break")}
+                  learn={() => navigate("missions")}
+                  resume={() => {
+                    setResumeWeekly(true);
+                    navigate("spelling-hq");
+                  }}
+                />
+              )}
+              {screen === "missions" && (
+                <LearnMenu
+                  state={state}
+                  choose={choose}
+                  spelling={() => {
+                    setResumeWeekly(false);
+                    navigate("spelling-hq");
+                  }}
+                  arcade={() => navigate("arcade")}
+                  homework={() => navigate("homework")}
+                  takeBreak={() => navigate("break")}
+                />
+              )}
+              {screen === "rewards" && (
+                <Rewards
+                  state={state}
+                  change={setState}
+                  arcade={() => navigate("arcade")}
+                />
               )}
               {screen === "spelling-hq" && (
                 <WeeklyHQ
                   state={state}
                   change={setState}
+                  autoResume={resumeWeekly}
                   onGeneral={() => choose("spelling")}
                   onManage={() => setGate(true)}
                 />
@@ -600,7 +428,10 @@ export default function App() {
                     <button
                       className="primary"
                       disabled={starsNeeded > 0}
-                      onClick={() => setState((s) => redeemTicket(s))}
+                      onClick={() => {
+                        setState((s) => redeemTicket(s));
+                        celebrate("reward");
+                      }}
                     >
                       Get a game ticket
                     </button>
@@ -669,7 +500,10 @@ export default function App() {
                   questions={questions}
                   state={state}
                   change={setState}
-                  onDone={() => navigate("complete")}
+                  onDone={() => {
+                    navigate("complete");
+                    celebrate("victory");
+                  }}
                   onBack={() => navigate("home")}
                 />
               )}
@@ -708,6 +542,7 @@ export default function App() {
               {screen === "break" && (
                 <BreakTime
                   minutes={state.settings.breakMinutes}
+                  settings={state.settings}
                   onDone={() => navigate("home")}
                 />
               )}
@@ -715,7 +550,10 @@ export default function App() {
                 <Parent
                   state={state}
                   change={setState}
-                  onDone={() => navigate("home")}
+                  onDone={() => {
+                    setSavedNotice(true);
+                    navigate("home");
+                  }}
                 />
               )}
             </>
@@ -726,9 +564,9 @@ export default function App() {
             <Zap size={13} /> HERO ACADEMY
           </span>
           <span>
-            Built for brave little learners.{" "}
+            YOUR PACE. YOUR POWER.{" "}
             <a
-              href="https://github.com/broof34/hero-academy/blob/codex/hero-academy-v3/THIRD_PARTY.md"
+              href={import.meta.env.BASE_URL + "licenses/THIRD_PARTY.txt"}
               target="_blank"
               rel="noreferrer"
             >
@@ -737,6 +575,18 @@ export default function App() {
           </span>
         </footer>
       </div>
+      <EffectLayer
+        settings={state.settings}
+        quiet={screen === "parent" || gate || !!state.session}
+        route={screen}
+      />
+      {audioOpen && (
+        <AudioDialog
+          settings={state.settings}
+          onChange={(patch) => setState((s) => updateSettings(s, patch))}
+          onClose={() => setAudioOpen(false)}
+        />
+      )}
       {gate && (
         <AdultGate
           onCancel={() => setGate(false)}

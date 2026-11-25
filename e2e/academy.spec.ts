@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(() => expect(browserErrors).toEqual([]));
 async function adult(page: Page) {
   await page
-    .getByRole("button", { name: "Grown-up zone" })
+    .getByRole("button", { name: "Grown-ups" })
     .filter({ visible: true })
     .click();
   const text = await page.getByTestId("adult-challenge").innerText();
@@ -192,7 +192,8 @@ test("small screens have accessible grown-up settings and no overflow", async ({
   await page.getByLabel("Stars per ticket").fill("8");
   await page.getByRole("button", { name: "Save settings" }).click();
   await page.reload();
-  await expect(page.getByText("/ 8 stars", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Rewards", exact: true }).click();
+  await expect(page.getByText(/8 stars = 1 ticket/)).toBeVisible();
 });
 test("custom questions grade real input and spelling tiles build words", async ({
   page,

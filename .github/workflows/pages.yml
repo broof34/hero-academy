@@ -1,7 +1,7 @@
 name: Validate and deploy Hero Academy
 on:
   push:
-    branches: [codex/hero-academy-v3]
+    branches: [codex/hero-academy-v3, codex/hero-academy-v4]
   workflow_dispatch:
 permissions:
   contents: read
