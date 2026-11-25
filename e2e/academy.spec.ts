@@ -58,12 +58,13 @@ test("learning, retries, persistence, tickets and a real timed game", async ({
   await page.getByRole("button", { name: "Arcade", exact: true }).click();
   await page.getByRole("button", { name: "Get a game ticket" }).click();
   await expect(page.getByTestId("star-balance")).toHaveText("0");
-  await page.getByRole("button", { name: "Play Star Defender" }).click();
-  const frame = page.frameLocator('iframe[title="Star Defender"]');
-  await expect(frame.locator("canvas")).toBeVisible();
+  await page.getByRole("button", { name: "Play Galactic Patrol" }).click();
+  await page.getByRole("button", { name: "Launch game · 1 ticket" }).click();
+  const frame = page.frameLocator('iframe[title="Galactic Patrol"]');
+  await expect(frame.locator("canvas").first()).toBeVisible({ timeout: 30000 });
   // Chrome suppresses pointer events briefly after a cross-origin iframe moves.
   await page.waitForTimeout(650);
-  await frame.getByRole("button", { name: "Start / fire" }).click();
+  await frame.getByRole("button", { name: "Launch patrol" }).click();
   await expect(frame.getByTestId("game-status")).toContainText("Playing");
   await page.clock.install();
   await page.clock.fastForward(151000);
@@ -114,14 +115,31 @@ test("racing adapter runs on tablet and progress stays local", async ({
   await page.getByRole("button", { name: "Grant a ticket" }).click();
   await page.getByRole("button", { name: "Save settings" }).click();
   await page.getByRole("button", { name: "Arcade", exact: true }).click();
-  await page.getByRole("button", { name: "Play Cosmic Rally" }).click();
-  const frame = page.frameLocator('iframe[title="Cosmic Rally"]');
-  await expect(frame.locator("canvas")).toBeVisible();
+  await page.getByRole("button", { name: "Play Super Kart 3D" }).click();
+  await page.getByRole("button", { name: "Launch game · 1 ticket" }).click();
+  const frame = page.frameLocator('iframe[title="Super Kart 3D"]');
+  await expect(frame.locator("canvas").first()).toBeVisible({ timeout: 30000 });
   // Chrome suppresses pointer events briefly after a cross-origin iframe moves.
   await page.waitForTimeout(650);
-  await frame.getByRole("button", { name: "Accelerate" }).hover();
+  await frame.getByRole("button", { name: /Start Race/ }).click();
+  await expect
+    .poll(
+      async () =>
+        page
+          .frames()
+          .find((f) => f.url().includes("/games/kart/"))
+          ?.evaluate(() =>
+            (
+              window as unknown as { __sk3d: { getState: () => string } }
+            ).__sk3d?.getState(),
+          ),
+      { timeout: 45000 },
+    )
+    .toBe("race");
+  await expect(frame.getByRole("button", { name: "Steer left" })).toBeVisible();
+  await frame.getByRole("button", { name: "Steer left" }).hover();
   await page.mouse.down();
-  await expect(frame.getByTestId("game-status")).toContainText(/Speed [1-9]/);
+  await page.mouse.up();
   await page.getByRole("button", { name: "Finish playing" }).click();
   await expect(page.locator("iframe")).toHaveCount(0);
   expect(

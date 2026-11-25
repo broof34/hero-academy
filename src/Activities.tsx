@@ -11,15 +11,12 @@ import {
 } from "lucide-react";
 import {
   clock,
-  remainingSeconds,
   type State,
   type Subject,
-  type Session,
   grantStars,
   submitAnswer,
 } from "./model";
 import { topics, type Question } from "./learning";
-import { games } from "./games";
 import { MissionArt } from "./Art";
 import { AdultGate, type Change } from "./Parent";
 export function speak(text: string, enabled: boolean): string {
@@ -57,13 +54,13 @@ export function SkillChooser({
       </button>
       <section className={`mission-intro panel ${subject}`}>
         <MissionArt kind={subject} />
-        <p className="eyebrow">YOUR NEXT LITTLE ADVENTURE</p>
+        <p className="eyebrow">MISSION BRIEFING</p>
         <h1>
           {subject === "math"
-            ? "Number heroes"
+            ? "Number Ops"
             : subject === "spelling"
-              ? "Word wizards"
-              : "Story explorers"}
+              ? "Word Lab"
+              : "Story Files"}
         </h1>
         <p>Five questions. Take your time. You can always ask for a hint.</p>
         <label>
@@ -308,62 +305,6 @@ export function Mission({
         There’s no rush. Every try helps your brain grow.
       </p>
     </div>
-  );
-}
-export function GameSession({
-  session,
-  onEnd,
-}: {
-  session: Session;
-  onEnd: () => void;
-}) {
-  const [seconds, setSeconds] = useState(() => remainingSeconds(session));
-  useEffect(() => {
-    const tick = () => setSeconds(remainingSeconds(session));
-    tick();
-    const id = setInterval(tick, 200);
-    return () => clearInterval(id);
-  }, [session]);
-  useEffect(() => {
-    if (seconds === 0) onEnd();
-  }, [seconds, onEnd]);
-  const game = games[session.game];
-  return (
-    <section className="game-session panel">
-      <div className="session-head">
-        <div>
-          <p className="eyebrow">YOU EARNED THIS ADVENTURE</p>
-          <h1>{game.title}</h1>
-        </div>
-        <div
-          className={`countdown ${seconds <= 30 ? "urgent" : ""}`}
-          aria-label="Game time remaining"
-        >
-          <Timer />
-          {clock(seconds)}
-        </div>
-        <button className="secondary" onClick={onEnd}>
-          Finish playing
-        </button>
-      </div>
-      {seconds <= 30 && seconds > 0 && (
-        <p className="warning" role="alert">
-          {seconds} seconds left · Get ready for your next adventure!
-        </p>
-      )}
-      {seconds > 0 && (
-        <iframe
-          title={game.title}
-          src={import.meta.env.BASE_URL + game.path}
-          sandbox="allow-scripts"
-          referrerPolicy="no-referrer"
-        />
-      )}
-      <p className="fine-print">
-        Your ticket starts one session. You can replay within this time. When
-        the timer ends, your game stops.
-      </p>
-    </section>
   );
 }
 export function Homework({ state, change }: { state: State; change: Change }) {

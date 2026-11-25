@@ -1,7 +1,7 @@
 name: Validate and deploy Hero Academy
 on:
   push:
-    branches: [codex/hero-academy-mvp]
+    branches: [codex/hero-academy-v2]
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,6 +20,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run build:games
+      - run: git diff --exit-code -- public/games/kart public/games/galactic
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
@@ -29,6 +31,7 @@ jobs:
         with:
           path: dist
   deploy:
+    if: github.event_name == 'workflow_dispatch'
     needs: build
     runs-on: ubuntu-latest
     environment:

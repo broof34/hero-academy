@@ -1,0 +1,5 @@
+# Committed distributions are reproducible from vendor/ via npm run build:games.
+# Three.js embeds GLSL template strings with intentional source whitespace.
+public/games/kart/game.js linguist-generated=true whitespace=-blank-at-eol
+public/games/kart/game.css linguist-generated=true
+public/games/galactic/game.js linguist-generated=true

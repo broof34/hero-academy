@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; media-src 'none'"
+    />
+    <title>Galactic Patrol · Hero Academy</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #030914;
+        color: #e9f4ff;
+        font: 16px system-ui;
+      }
+      main {
+        position: relative;
+        max-width: 1200px;
+        margin: auto;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        aspect-ratio: 2;
+        touch-action: none;
+        background: #08182c;
+      }
+      .hud {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 18px;
+        background: #0c1b31;
+        font-weight: 800;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .hud span {
+        color: #75d5ff;
+      }
+      #overlay {
+        position: absolute;
+        inset: 45px 0 0;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        background: linear-gradient(90deg, #050e23ed, #050e23b8);
+        padding: 15px;
+      }
+      #overlay h1 {
+        font-size: clamp(26px, 4vw, 44px);
+        font-style: italic;
+        margin: 0 0 15px;
+      }
+      #overlay p {
+        max-width: 520px;
+        line-height: 1.6;
+        color: #a4bdda;
+      }
+      button {
+        border: 1px solid #ffffff30;
+        border-radius: 8px;
+        color: white;
+        background: #1569dc;
+        padding: 14px 25px;
+        font: 800 18px system-ui;
+        min-height: 52px;
+        touch-action: none;
+      }
+      button:focus-visible {
+        outline: 3px solid #ffda75;
+        outline-offset: 3px;
+      }
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 14px;
+        flex-wrap: wrap;
+      }
+      .controls p {
+        font-size: 14px;
+        color: #a8bcd5;
+        margin: 0;
+      }
+      .controls button {
+        min-width: 65px;
+      }
+      .game-error {
+        color: #ffc46a;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="hud">
+        <span>GALACTIC PATROL</span>
+        <div id="status" data-testid="game-status">Loading your ship…</div>
+      </div>
+      <canvas
+        id="gameCanvas"
+        width="1000"
+        height="500"
+        aria-label="Galactic Patrol action game"
+      ></canvas>
+      <div id="overlay">
+        <div>
+          <p>HERO ACADEMY · SPACE DIVISION</p>
+          <h1>THE GALAXY NEEDS YOU.</h1>
+          <p>
+            Move up and down to line up your shots. Your ship fires for you!
+            Collect glowing power-ups and keep your shields safe.
+          </p>
+          <button id="start" disabled>Launch patrol</button>
+        </div>
+      </div>
+    </main>
+    <div class="controls">
+      <button data-dir="-1" aria-label="Fly up">▲ UP</button
+      ><button data-dir="1" aria-label="Fly down">▼ DOWN</button>
+      <p>
+        Arrow keys / W & S · Or drag your ship up and down<br />Space: fire · P:
+        pause · Auto-fire is on
+      </p>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>

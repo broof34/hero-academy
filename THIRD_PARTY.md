@@ -2,14 +2,32 @@
 
 ## Bundled game code
 
-### Star Defender
+### Super Kart 3D (V2 primary, saved ID `racer`)
+
+Source: [fecolinhares/super-kart-3djs](https://github.com/fecolinhares/super-kart-3djs), pinned revision `d94f63da26b6a01ecbfc1e301e5d754ea64649c2`.
+Copyright (c) 2026 Feco Linhares. **MIT**. Full notices: `vendor/super-kart/LICENSE`, `public/games/kart/LICENSE.txt`. Runtime Three.js 0.164.1 is MIT, with full notice at `public/games/kart/THREE-LICENSE.txt`.
+
+Selectively imported only `src/`, license, and upstream README; excluded the repository’s roughly 1.4 GB of art experiments, renders, and other archives. Inspection found no external model, texture, font, recording, CDN, tracking or network asset requirements in the selected source. Track, karts, scenery and textures are created procedurally; audio uses Web Audio synthesis. **No franchise art or commercial recordings are included.**
+
+Adaptations: bundled as a classic IIFE plus local CSS using esbuild (runs in an opaque `allow-scripts` iframe without module CORS); replaced private preference storage references with an in-memory store to prevent parent-save access; 50cc, auto-go and steering assist defaults; Neon City default while preserving both tracks; corrected narrow-screen/coarse-pointer touch-detection mismatch; capped automatic graphics quality to low/medium for embedded play; removed duplicate identical state fields; preserved query parameters when changing tracks; added source-checked parent mute/pause/reduced-motion messages, teardown, and friendly WebGL error/fallback guidance. Cosmetic menu overrides use system fonts and Academy colors. Upstream geometry, racing simulation, AI, track builder, items, driver customization, HUD and touch systems remain.
+
+### Galactic Patrol (V2 primary, saved ID `space`)
+
+Source: [Jafnee/Generic-Space-Shooter](https://github.com/Jafnee/Generic-Space-Shooter), pinned revision `c4763e722bacaaaa0af40f77527937e86734f1f5`.
+Copyright (c) 2019 Jafnee Jesmee. **MIT**. Full notices: `vendor/generic-space-shooter/LICENSE`, `public/games/galactic/LICENSE.txt`.
+
+Reused game/character/in-play models, action controls/shooting, collision and power-up logic, wave generation, and view mechanics. Replaced AMD/RequireJS delivery with a small static named-module loader; replaced storage with no-op private stats, removed original menu assets and all audio/font files, added a new DOM launch/replay UI, automatic fire, pointer/touch/keyboard movement, generated background/laser graphics and synthesized quiet SFX, fixed logical canvas size, bounded bullet arrays, a fixed 60 Hz simulation adapter for consistent speed on 30/60/120 Hz displays, recoverable AudioContext mute/resume, and integrated pause/mute/teardown. The existing enemy classes, waves, HP, scoring, pickups and upgrades remain. Session time is always enforced by the Academy parent.
+
+**Asset permissions:** selected sprites come only from the included **Kenney Space Shooter Redux** pack. Its actual `images/SpaceShooterRedux/license.txt` declares **CC0**, explicitly permits personal/commercial use, and credits Kenney Vleugels (kenney.nl). Full original notice is preserved in `public/games/galactic/KENNEY-LICENSE.txt` and the vendor source. The exact source-relative paths are recorded in `vendor/generic-space-shooter/assets.json`; ships are rotated into horizontal flight by the runtime. No other shooter assets, explosion sheets, franchise music, paid fonts or recordings are copied into the distribution.
+
+### Star Defender (lightweight fallback)
 
 Adapted from [dwmkerr/spaceinvaders](https://github.com/dwmkerr/spaceinvaders), revision `5f79c6ae4f3cb1fbda0be5cc5212a3a407fa27ee`.
 Copyright (c) 2019 Dave Kerr. **MIT**; complete notice: [public/games/space/LICENSE.txt](public/games/space/LICENSE.txt).
 
 Vendored engine: `public/games/space/engine.js`. Changes: repaired instance/global references, changed title/colors, adjusted difficulty for young learners, added keyboard/pointer controls and isolated embedding, removed all audio loading and assets. The existing state machine, movement, waves, collisions, shooting, score, and lives remain. Rendering uses code-drawn geometry. **No classic game sound recordings, screenshots, logos, or other image assets are included.**
 
-### Cosmic Rally
+### Cosmic Rally (lightweight fallback)
 
 Adapted from [jakesgordon/javascript-racer](https://github.com/jakesgordon/javascript-racer), revision `3e8a060b5900755db27f899612a74a77427c853e`.
 Copyright (c) 2012, 2013, 2014, 2015, 2016 Jake Gordon and contributors. **MIT**; complete notice: [public/games/racer/LICENSE.txt](public/games/racer/LICENSE.txt).
@@ -22,25 +40,25 @@ Vendored code: `public/games/racer/common.js` and `race.js`, adapted from `commo
 - Lucide React icons — Lucide Contributors, ISC (with Feather-derived icons under MIT). Package license/notice preserved by npm; icon license reproduced below.
 - Vite, TypeScript, Vitest, ESLint, typescript-eslint, Playwright and build/test dependencies retain their package licenses. See each installed package’s LICENSE/NOTICE files and package-lock.json for exact versions. They are development tools unless bundled into runtime by the build.
 
-All hero artwork, card illustrations, game previews, simple racer graphics, questions, and reading passages were authored for Hero Academy. SVG assets are inline code. Device/system fonts and OS emoji are rendered by the browser; no font or emoji files are redistributed. No paid, downloaded, branded superhero, or copyrighted commercial game assets are used.
+The city key art was generated specifically for Hero Academy with the built-in image-generation tool. The exact prompt and provenance are in `public/art/ATTRIBUTION.md`; it depicts an original masked grappling hero, with no Marvel logos, Spider-Man costume, or other protected franchise assets. V2 game previews are screenshots captured from actual play of the imported MIT/CC0 games, and retain those underlying notices. Mission badges, fallback preview graphics, questions and reading passages were authored for Hero Academy. SVG assets are inline code. Device/system fonts and OS emoji are rendered by the browser; no font or emoji files are redistributed. No paid, downloaded, branded superhero, or copyrighted commercial game assets are used.
 
 ## Referenced repositories investigated
 
 Inspected availability, declared licenses, READMEs/package dependencies and relevant source before choosing reuse. The educational generators/content here were implemented originally because integrating an entire app would add more work and dependencies than this compact first-grade MVP.
 
-| Candidate                    | Findings and decision                                                                                                                                                                                                               |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| binolgeorge/joju-learn       | Available; MIT code, CC BY-NC 4.0 content. Inspected README and procedural generator. Large engine tied to curriculum types, voice/server/optional Firebase. No code/content copied.                                                |
-| brightleap-app/brightleap    | Available; MIT. React/Vite with Supabase, aimed at Year 6 rather than first grade. No code/assets copied.                                                                                                                           |
-| JesseRWeigel/battlemath      | Available; MIT. Inspected package/src structure; React Native Web and additional app machinery. Original compact generator is quicker for the specified scope. No code/assets copied.                                               |
-| MaybeSword/math-practice     | Available, no declared repository license in API metadata. Not reused.                                                                                                                                                              |
-| h5p                          | Organization, not one application. Inspected h5p/h5p-php-library: GPL PHP platform/library requiring LMS integration and content packages. Does not fit static local-only Vite MVP. Not reused.                                     |
-| canadianveggie/spellie       | Available; inspected license: PolyForm Noncommercial 1.0.0 with required notices and trademark reservations. Daily Wordle structure is not a fit for phonics/tiles/reading hub. No code/content/branding copied.                    |
-| fecolinhares/super-kart-3djs | Available; MIT, Three.js/Vite, procedural-art claim in README. Large repo (~1.6 GB metadata size) and much heavier 3D app. Chose small 2D pseudo-3D racer for speed and compatibility. No assets copied.                            |
-| Jafnee/Generic-Space-Shooter | Available; MIT code. Cloned and inspected engine/credits; referenced image and sound directories absent from checkout; separately credited font/music/assets. Chose a complete geometry-only engine instead. No code/assets copied. |
-| noisyboy08/SpiderWeb-2D      | Available, no declared license. Not reused.                                                                                                                                                                                         |
-| RedEdge967/Spider-Man        | Available, no declared license; branded character imagery also undesirable. Not reused.                                                                                                                                             |
-| scottrippey/xquestjs         | Available, no declared repository license. Not reused.                                                                                                                                                                              |
+| Candidate                    | Findings and decision                                                                                                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| binolgeorge/joju-learn       | Available; MIT code, CC BY-NC 4.0 content. Inspected README and procedural generator. Large engine tied to curriculum types, voice/server/optional Firebase. No code/content copied.                                           |
+| brightleap-app/brightleap    | Available; MIT. React/Vite with Supabase, aimed at Year 6 rather than first grade. No code/assets copied.                                                                                                                      |
+| JesseRWeigel/battlemath      | Available; MIT. Inspected package/src structure; React Native Web and additional app machinery. Original compact generator is quicker for the specified scope. No code/assets copied.                                          |
+| MaybeSword/math-practice     | Available, no declared repository license in API metadata. Not reused.                                                                                                                                                         |
+| h5p                          | Organization, not one application. Inspected h5p/h5p-php-library: GPL PHP platform/library requiring LMS integration and content packages. Does not fit static local-only Vite MVP. Not reused.                                |
+| canadianveggie/spellie       | Available; inspected license: PolyForm Noncommercial 1.0.0 with required notices and trademark reservations. Daily Wordle structure is not a fit for phonics/tiles/reading hub. No code/content/branding copied.               |
+| fecolinhares/super-kart-3djs | V2: selectively imported MIT source and procedural assets; see primary integration above.                                                                                                                                      |
+| Jafnee/Generic-Space-Shooter | V2: MIT engine and actual CC0 Kenney pack license verified. Imported selected mechanics and licensed sprites only; see above.                                                                                                  |
+| noisyboy08/SpiderWeb-2D      | Rechecked V2 revision d397156970210f4967846f30daae1f8b89b7675c. No actual license file or code permission grant; README badge is insufficient. Includes named franchise villains and unverified art. No code or assets copied. |
+| RedEdge967/Spider-Man        | Rechecked V2 revision 5abe8c9868fc76f2d83ab75fac1c9277175cc1a7. No established code license; franchise assets unverified. No code/assets copied.                                                                               |
+| scottrippey/xquestjs         | Available, no declared repository license. Not reused.                                                                                                                                                                         |
 
 ## Lucide notice
 

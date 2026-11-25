@@ -1,0 +1,11 @@
+{
+  "playerShip": "PNG/playerShip3_blue.png",
+  "scout": "PNG/Enemies/enemyRed1.png",
+  "fighter": "PNG/Enemies/enemyRed2.png",
+  "interceptor": "PNG/Enemies/enemyGreen3.png",
+  "tank": "PNG/Enemies/enemyBlue4.png",
+  "transport": "PNG/Enemies/enemyRed3.png",
+  "pickUpHealth": "PNG/Power-ups/pill_green.png",
+  "pickUpDamage": "PNG/Power-ups/bolt_gold.png",
+  "pickUpFireRate": "PNG/Power-ups/powerupBlue_bolt.png"
+}

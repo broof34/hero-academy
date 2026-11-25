@@ -4,4 +4,4 @@ function down(k){game.keyDown(k);document.querySelector('small').textContent='Pl
 function up(k){game.keyUp(k);}
 document.querySelectorAll('[data-key]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);down(+b.dataset.key);};b.onclick=()=>{down(+b.dataset.key);up(+b.dataset.key);};b.onpointerup=b.onpointercancel=b.onlostpointercapture=()=>up(+b.dataset.key);});
 onkeydown=e=>{if([32,37,39,80].includes(e.keyCode)){e.preventDefault();down(e.keyCode)}};onkeyup=e=>up(e.keyCode);onblur=()=>{game.pressedKeys={}};onpagehide=()=>game.stop();
-document.querySelectorAll('button').forEach(b=>b.disabled=false);</script></body></html>
+document.querySelectorAll('button').forEach(b=>b.disabled=false);</script><script>var academyPaused=false;addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='academy:settings')return;const p=e.data.paused===true;if(p===academyPaused)return;academyPaused=p;if(p){game.stop();game.pressedKeys={}}else game.intervalId=setInterval(()=>GameLoop(game),1000/game.config.fps)});parent.postMessage({type:'academy:ready'},'*');</script></body></html>

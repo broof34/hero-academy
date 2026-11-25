@@ -27,16 +27,11 @@ import {
   type GameId,
 } from "./model";
 import { makeQuestion, type Question } from "./learning";
-import { HeroArt, MissionArt, GameArt } from "./Art";
+import { MissionArt } from "./Art";
 import { AdultGate, Parent, exportFile } from "./Parent";
-import {
-  SkillChooser,
-  Mission,
-  GameSession,
-  Homework,
-  BreakTime,
-} from "./Activities";
+import { SkillChooser, Mission, Homework, BreakTime } from "./Activities";
 import { games } from "./games";
+import { GameBriefing, GamePreview, GameSession } from "./Arcade";
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -67,13 +62,14 @@ const descriptions = {
   reading: "Big adventures in little stories.",
 };
 const names = {
-  math: "Number heroes",
-  spelling: "Word wizards",
-  reading: "Story explorers",
+  math: "Number Ops",
+  spelling: "Word Lab",
+  reading: "Story Files",
 };
 type Screen =
   | "home"
   | "missions"
+  | "briefing"
   | "arcade"
   | "homework"
   | "parent"
@@ -85,6 +81,7 @@ export default function App() {
   const [loaded] = useState(load);
   const [state, setState] = useState<State>(loaded.state),
     [storageError, setStorageError] = useState(loaded.error);
+  const [selectedGame, setSelectedGame] = useState<GameId>("racer");
   const [screen, setScreen] = useState<Screen>("home"),
     [subject, setSubject] = useState<Subject>("math"),
     [questions, setQuestions] = useState<Question[]>([]),
@@ -125,7 +122,8 @@ export default function App() {
     setMessage("Nice playing, hero! Your next adventure is waiting.");
   }
   function play(game: GameId) {
-    setState((s) => startSession(s, game));
+    setSelectedGame(game);
+    navigate("briefing");
   }
   function startMission(topic: string) {
     const offset = Math.floor(Math.random() * 100);
@@ -177,7 +175,7 @@ export default function App() {
       </main>
     );
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${state.session ? "is-playing" : ""}`}>
       <aside className="sidebar">
         <button
           className="brand"
@@ -191,7 +189,7 @@ export default function App() {
             HERO<span className="brand-sub">ACADEMY</span>
           </span>
         </button>
-        <div className="sidebar-caption">YOUR ADVENTURE</div>
+        <div className="sidebar-caption">COMMAND CENTER</div>
         <nav aria-label="Main navigation">
           {(
             [
@@ -315,17 +313,21 @@ export default function App() {
             </div>
           )}
           {state.session ? (
-            <GameSession session={state.session} onEnd={finishGame} />
+            <GameSession
+              session={state.session}
+              onEnd={finishGame}
+              settings={state.settings}
+            />
           ) : (
             <>
               {(screen === "home" || screen === "missions") && (
                 <>
                   <header className="page-title">
                     <div>
-                      <p className="eyebrow">READY, SET, GROW!</p>
+                      <p className="eyebrow">YOUR HERO STORY STARTS HERE</p>
                       <h1>
                         {screen === "home"
-                          ? "Hey, super learner!"
+                          ? "Welcome to Hero HQ."
                           : "Choose your next mission."}{" "}
                         <span className="wave">
                           {screen === "home" ? "✦" : ""}
@@ -344,17 +346,17 @@ export default function App() {
                     <section className="hero-banner">
                       <div className="hero-copy">
                         <span className="banner-label">
-                          <span /> YOUR SUPERPOWER IS TRYING
+                          <span /> THE CITY NEEDS A HERO LIKE YOU
                         </span>
                         <h2>
-                          Small steps.
+                          Small missions.
                           <br />
-                          <em>Super adventures.</em>
+                          <em>Legendary heroes.</em>
                         </h2>
                         <p>
-                          Practice a little. Collect stars.
+                          Every skill is a superpower.
                           <br />
-                          Let your next adventure begin.
+                          Train today. Unlock your next adventure.
                         </p>
                         <button
                           className="banner-button"
@@ -366,7 +368,11 @@ export default function App() {
                           Five questions. All the time you need.
                         </span>
                       </div>
-                      <HeroArt />
+                      <img
+                        className="city-scene"
+                        src={import.meta.env.BASE_URL + "art/academy-city.jpg"}
+                        alt="An original masked hero swinging above a neon city skyline"
+                      />
                       <span className="hero-orbit" />
                     </section>
                   )}
@@ -374,7 +380,7 @@ export default function App() {
                     <div className="dashboard-main">
                       <div className="section-heading">
                         <h2>
-                          <Rocket size={21} /> Your learning missions
+                          <Rocket size={21} /> Choose your mission
                         </h2>
                         <span>Every try makes you stronger</span>
                       </div>
@@ -405,7 +411,7 @@ export default function App() {
                       </div>
                       <div className="section-heading arcade-heading">
                         <h2>
-                          <Gamepad2 size={22} /> A little play, well earned
+                          <Gamepad2 size={22} /> The reward arcade
                         </h2>
                         <button
                           className="text-button"
@@ -417,7 +423,13 @@ export default function App() {
                       <div className="game-cards compact">
                         {(Object.keys(games) as GameId[]).map((g) => (
                           <article className="game-card" key={g}>
-                            <GameArt game={g} />
+                            <button
+                              className="game-preview-link"
+                              aria-label={`View ${games[g].title}`}
+                              onClick={() => play(g)}
+                            >
+                              <GamePreview game={g} />
+                            </button>
                             <div className="game-card-info">
                               <div>
                                 <h3>{games[g].title}</h3>
@@ -438,7 +450,7 @@ export default function App() {
                           <span>✦</span>
                         </div>
                         <p className="eyebrow">YOUR NEXT REWARD</p>
-                        <h2>Adventure awaits!</h2>
+                        <h2>Your next unlock</h2>
                         <p>
                           Turn your learning stars into
                           <br />a little arcade time.
@@ -507,12 +519,22 @@ export default function App() {
                   </div>
                 </>
               )}
+              {screen === "briefing" && (
+                <GameBriefing
+                  game={selectedGame}
+                  state={state}
+                  onBack={() => navigate("arcade")}
+                  onLaunch={() =>
+                    setState((s) => startSession(s, selectedGame))
+                  }
+                />
+              )}
               {screen === "arcade" && (
                 <>
                   <header className="page-title">
                     <div>
-                      <p className="eyebrow">THE HERO ARCADE</p>
-                      <h1>Your hard work. Your adventure.</h1>
+                      <p className="eyebrow">EARNED THROUGH YOUR EFFORT</p>
+                      <h1>The arcade is yours.</h1>
                       <p>
                         One ticket, one game, {state.settings.gameMinutes}{" "}
                         minutes of well-earned fun.
@@ -548,7 +570,7 @@ export default function App() {
                   <div className="game-cards arcade-grid">
                     {(Object.keys(games) as GameId[]).map((g) => (
                       <article className="game-card" key={g}>
-                        <GameArt game={g} />
+                        <GamePreview game={g} />
                         <div className="arcade-card-content">
                           <p className="eyebrow">{games[g].tag}</p>
                           <h2>{games[g].title}</h2>
@@ -561,7 +583,6 @@ export default function App() {
                             <button
                               className="primary"
                               aria-label={`Play ${games[g].title}`}
-                              disabled={state.tickets < 1}
                               onClick={() => play(g)}
                             >
                               <Gamepad2 size={18} /> Play
@@ -663,7 +684,7 @@ export default function App() {
           <span>
             Built for brave little learners.{" "}
             <a
-              href="https://github.com/broof34/hero-academy/blob/codex/hero-academy-mvp/THIRD_PARTY.md"
+              href="https://github.com/broof34/hero-academy/blob/codex/hero-academy-v2/THIRD_PARTY.md"
               target="_blank"
               rel="noreferrer"
             >
