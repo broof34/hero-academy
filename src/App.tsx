@@ -15,6 +15,7 @@ import {
   LockKeyhole,
   Coffee,
   Trophy,
+  BookOpenCheck,
 } from "lucide-react";
 import {
   freshState,
@@ -31,6 +32,8 @@ import { MissionArt } from "./Art";
 import { AdultGate, Parent, exportFile } from "./Parent";
 import { SkillChooser, Mission, Homework, BreakTime } from "./Activities";
 import { games } from "./games";
+import { WeeklyHQ } from "./spelling/WeeklyHQ";
+import { weeklyData } from "./spelling/engine";
 import { GameBriefing, GamePreview, GameSession } from "./Arcade";
 function load() {
   try {
@@ -68,6 +71,7 @@ const names = {
 };
 type Screen =
   | "home"
+  | "spelling-hq"
   | "missions"
   | "briefing"
   | "arcade"
@@ -195,20 +199,27 @@ export default function App() {
             [
               { id: "home", label: "Your base", icon: House },
               { id: "missions", label: "Missions", icon: Rocket },
+              { id: "spelling-hq", label: "Spelling HQ", icon: BookOpenCheck },
               { id: "arcade", label: "Arcade", icon: Gamepad2 },
               { id: "homework", label: "Homework", icon: Timer },
             ] as const
-          ).map((n) => (
-            <button
-              key={n.id}
-              className={screen === n.id ? "active" : ""}
-              onClick={() => navigate(n.id)}
-            >
-              <n.icon size={21} />
-              <span>{n.label}</span>
-              {screen === n.id && <i />}
-            </button>
-          ))}
+          )
+            .filter(
+              (n) =>
+                n.id !== "spelling-hq" ||
+                state.settings.subjects.includes("spelling"),
+            )
+            .map((n) => (
+              <button
+                key={n.id}
+                className={screen === n.id ? "active" : ""}
+                onClick={() => navigate(n.id)}
+              >
+                <n.icon size={21} />
+                <span>{n.label}</span>
+                {screen === n.id && <i />}
+              </button>
+            ))}
         </nav>
         <div className="sidebar-bottom">
           <div className="hero-reminder">
@@ -376,6 +387,31 @@ export default function App() {
                       <span className="hero-orbit" />
                     </section>
                   )}
+                  {state.settings.subjects.includes("spelling") && (
+                    <section className="weekly-home-strip">
+                      <BookOpenCheck size={30} />
+                      <div>
+                        <p className="eyebrow">
+                          NEW TRANSMISSIONS · WEEKLY SPELLING
+                        </p>
+                        <h2>
+                          {weeklyData(state).lists.find(
+                            (l) => l.id === weeklyData(state).activeListId,
+                          )?.name ?? "Your school words. Your secret codes."}
+                        </h2>
+                        <p>
+                          Eight training modes, tricky-word review, and your own
+                          spelling test.
+                        </p>
+                      </div>
+                      <button
+                        className="secondary"
+                        onClick={() => navigate("spelling-hq")}
+                      >
+                        Open Spelling HQ
+                      </button>
+                    </section>
+                  )}
                   <div className="dashboard-grid">
                     <div className="dashboard-main">
                       <div className="section-heading">
@@ -518,6 +554,14 @@ export default function App() {
                     universe. No ads. No accounts. Just learning.
                   </div>
                 </>
+              )}
+              {screen === "spelling-hq" && (
+                <WeeklyHQ
+                  state={state}
+                  change={setState}
+                  onGeneral={() => choose("spelling")}
+                  onManage={() => setGate(true)}
+                />
               )}
               {screen === "briefing" && (
                 <GameBriefing
@@ -684,7 +728,7 @@ export default function App() {
           <span>
             Built for brave little learners.{" "}
             <a
-              href="https://github.com/broof34/hero-academy/blob/codex/hero-academy-v2/THIRD_PARTY.md"
+              href="https://github.com/broof34/hero-academy/blob/codex/hero-academy-v3/THIRD_PARTY.md"
               target="_blank"
               rel="noreferrer"
             >

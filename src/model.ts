@@ -1,3 +1,5 @@
+import type { WeeklyData } from "./spelling/types";
+import { hydrateWeekly } from "./spelling/data";
 export type Subject = "math" | "spelling" | "reading";
 export type GameId = "space" | "racer";
 export type Settings = {
@@ -29,6 +31,7 @@ export type State = {
   settings: Settings;
   custom: CustomQuestion[];
   session: Session | null;
+  weeklySpelling?: WeeklyData;
 };
 export const STORAGE_KEY = "hero-academy:v1";
 export const freshState = (): State => ({
@@ -216,5 +219,7 @@ export function hydrate(raw: unknown): State {
       throw new Error("Invalid arcade session.");
     s.session = v as Session;
   }
+  if (raw.weeklySpelling !== undefined)
+    s.weeklySpelling = hydrateWeekly(raw.weeklySpelling);
   return s;
 }

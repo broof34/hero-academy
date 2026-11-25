@@ -1,4 +1,4 @@
-# Hero Academy V2
+# Hero Academy V3
 
 A first-grade learning adventure with short missions, encouraging retries, effort rewards, an original comic-book superhero interface, and an earned arcade. React + Vite + TypeScript + plain CSS. No backend, account, subscription, advertising, or analytics.
 
@@ -32,6 +32,20 @@ npm run preview
 
 The grown-up check is a friendly gate, **not a secure parental control**. Browser-local software cannot prevent a technically knowledgeable user from editing their save, clock, or opening game files directly.
 
+## Weekly spelling (V3)
+
+In **Grown-up zone → Weekly Spelling Lists**, name a list, paste comma/newline-separated words, and optionally set its test date. Edit individual words and example sentences, choose the active week, archive/reuse lists, and inspect mastery, commonly missed words and recent practice results. Export a spelling list as JSON and import it on another device; this transfers words, sentences and date only, never rewards or learning evidence. Full progress export remains available separately.
+
+**Spelling HQ** offers Flashcards, Word Builder, Missing Letters, Look/Cover/Spell/Check, Listen and Spell, Practice Test, Tricky Word Review, and Mixed Training. The existing general spelling missions remain separate. Every school word generates its own activities, including repeated letters, accents, spaces, apostrophes and hyphens. Use physical keys, large screen keys or indexed letter tiles.
+
+Recognition, assisted spelling, independent spelling and test evidence are tracked separately per normalized word across lists. Mastery requires **three consecutive independent successes in distinct sessions**; study, tiles, missing letters, cover practice and adult help cannot establish mastery. Misses are prioritized, mastered words become due again, and Mixed Training can revisit due words from other unarchived lists. Ordinary training uses up to eight words; a randomized test covers the entire list. Tests stage answers privately until completion: no correctness feedback, progress or correctness-based stars appear mid-test. A completed test awards two effort stars plus one per correct spelling; other completed sessions award one effort star plus one per correctly spelled answer. Flashcard views earn no per-word stars. Mistakes never subtract stars.
+
+Local English text-to-speech reuses the existing speech setting. If unavailable, a grown-up can unlock a private reading card, read it aloud and hide it before spelling. Such turns remain marked assisted after a reload. Example sentences appear during study and tile building, or in that private card; they stay hidden during covered, missing-letter and independent turns. Spelling inputs disable autocorrect, autocomplete and spellcheck where the device permits.
+
+Weekly sessions resume after reload and each turn is committed once. Save & leave pauses a session; ending an unfinished test discards its staged answers without test rewards. Editing a list affects future sessions; an existing session keeps its original word snapshot. Lists support up to 100 words, 100 lists and 50 recent completed sessions. Progress belongs to the same normalized word across weeks; archiving does not erase evidence. List import is limited to the documented version-1 spelling-list JSON format, 200 KB. These are practice indicators, not a validated assessment. There is no cloud sync; transfer a list to practice it elsewhere with separate device progress.
+
+Reused MIT SchoolWordList's three-success mastery/revision logic and Brightleap's due/unseen/future ordering and shuffle in a compact local engine; the parent interface, eight modes, save integration and reward handling are new. Exact pinned revisions, modifications and full notices are in [THIRD_PARTY.md](THIRD_PARTY.md).
+
 ## Included activities
 
 - Math: addition/subtraction within 10 or 20; object counting; comparisons; missing numbers; patterns; simple story problems; optional counting aids.
@@ -54,10 +68,11 @@ npm run build
 npm run test:e2e
 ```
 
-Browser tests use installed Google Chrome (`channel: chrome`). For CI without Chrome, install it with `npx playwright install chrome` or change the channel to an installed Playwright browser. Tests cover a full five-question mission, retry behavior, reload persistence, ticket spending, live game adapters, expiry/unloading, adult homework confirmation, custom prompts, export, and tablet layout. Unit tests cover reward boundaries, full V1 save compatibility with either legacy game ID, local game registration/assets, settings normalization, and every learning skill at both math levels. The new browser suite actually drives the 3D kart against five AI opponents, flies/fires the space fighter, checks pause/fallback/expiry and unchanged ticket balances, verifies there are no missing game assets or external requests, and returns to learning.
+Browser tests use installed Google Chrome (`channel: chrome`). For CI without Chrome, install it with `npx playwright install chrome` or change the channel to an installed Playwright browser. Weekly tests additionally cover all eight modes, repeated-letter tiles, one-letter tablet practice, parent editing/actual JSON transfer, hidden assessment answers/rewards, adult-assisted reloads, mastery and review queues, old-save hydration and duplicate submission protection. Tests cover a full five-question mission, retry behavior, reload persistence, ticket spending, live game adapters, expiry/unloading, adult homework confirmation, custom prompts, export, and tablet layout. Unit tests cover reward boundaries, full V1 save compatibility with either legacy game ID, local game registration/assets, settings normalization, and every learning skill at both math levels. The new browser suite actually drives the 3D kart against five AI opponents, flies/fires the space fighter, checks pause/fallback/expiry and unchanged ticket balances, verifies there are no missing game assets or external requests, and returns to learning.
 
 ## Project layout
 
+- `src/spelling/`: list schema/validation, pure adaptive engine, parent manager and eight-mode HQ.
 - `src/model.ts`: versioned save schema, star/ticket rules, session deadlines, hydration.
 - `src/learning.ts`: small original question generator and content bank.
 - `src/Activities.tsx`: one-question missions and homework/break timers.
@@ -79,13 +94,13 @@ The application does not import Three.js into its own runtime. The approximately
 
 ## Deployment
 
-GitHub Actions validates pushes to `codex/hero-academy-v2`; **deployment requires a manual workflow dispatch after validation**. This keeps the previous live version safe during development. Select “Validate and deploy Hero Academy” → “Run workflow” → `codex/hero-academy-v2`, or:
+GitHub Actions validates pushes to `codex/hero-academy-v3`; **deployment requires a manual workflow dispatch after validation**. This keeps the previous live version safe during development. Select “Validate and deploy Hero Academy” → “Run workflow” → `codex/hero-academy-v3`, or:
 
 ```sh
-gh workflow run pages.yml --ref codex/hero-academy-v2
+gh workflow run pages.yml --ref codex/hero-academy-v3
 ```
 
-Repository Settings → Pages must use **GitHub Actions**. The `github-pages` environment must allow the V2 branch. `vite.config.ts` retains base `/hero-academy/`. Source game bundles are rebuilt and verified against the committed distribution in CI.
+Repository Settings → Pages must use **GitHub Actions**. The `github-pages` environment must allow the V3 branch. `vite.config.ts` retains base `/hero-academy/`. Source game bundles are rebuilt and verified against the committed distribution in CI.
 
 ## Privacy, storage, and limits
 
@@ -93,9 +108,9 @@ Repository Settings → Pages must use **GitHub Actions**. The `github-pages` en
 - The app makes no analytics, advertising, backend, external-font, or game-asset requests. GitHub Pages receives ordinary hosting requests. Read aloud only selects an English voice marked local by the browser; availability varies by OS/browser. Game audio is generated locally with Web Audio and starts muted unless enabled. The host mute control remains authoritative; no third-party recordings are shipped.
 - Saves with unknown versions or invalid progress are left untouched and can be exported for recovery. Unavailable/full browser storage produces a warning and export option.
 - A game deadline survives reloads and time in background tabs. The game is removed at the next browser tick after expiry; suspended pages cannot run until the OS resumes them. A ticket is consumed on launch, including early exits. In-progress learning missions and homework focus rounds reset when you leave their screen/reload; stars already earned stay saved. Use one tab at a time to avoid competing local saves.
-- This is practice content, not a full curriculum or adaptive assessment. Reading/phonics content is a compact starter bank. No cross-device sync, cloud backup, JSON import, secure parent PIN, or installable offline cache. The 3D game auto-selects a conservative quality profile; weaker devices can use the 2D fallback.
+- This is practice content, not a full curriculum or adaptive assessment. Reading/phonics content is a compact starter bank. No cross-device sync, cloud backup, full-save JSON import, secure parent PIN, or installable offline cache. The 3D game auto-selects a conservative quality profile; weaker devices can use the 2D fallback.
 - Text answers match one adult-defined answer, not equivalent math expressions or alternative spellings.
 
 ## Licensing
 
-Original code, content, and SVG illustrations: MIT. See public/art/ATTRIBUTION.md for key-art generation provenance and gameplay screenshot credits. Third-party notices, source revisions, changes, and the repository investigation are documented in [THIRD_PARTY.md](THIRD_PARTY.md). Preserved full notices are in `public/games/*/LICENSE.txt`.
+Original code, content, and SVG illustrations: MIT. See public/art/ATTRIBUTION.md for key-art generation provenance and gameplay screenshot credits. Third-party notices, source revisions, changes, and the repository investigation are documented in [THIRD_PARTY.md](THIRD_PARTY.md). Preserved full notices are in `public/games/*/LICENSE.txt`, `vendor/*/LICENSE` and `public/licenses/`.

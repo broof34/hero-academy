@@ -1,5 +1,19 @@
 # Third-party code and asset attribution
 
+## Weekly spelling logic (V3)
+
+### SchoolWordList — primary foundation
+
+[jamesf91/SchoolWordList](https://github.com/jamesf91/SchoolWordList), pinned revision `f5b4cbe90c191e4d51825a3d9eda61ea1f2b894a`. MIT, Copyright (c) 2026 J. Fang. Full unmodified notice: `vendor/school-word-list/LICENSE`; shipped with the site at `public/licenses/SchoolWordList.txt`.
+
+Inspected `src/types/index.ts`, parent list UI/hooks, practice flows, `lib/mastery.ts`, `lib/revisionList.ts` and related tests. Adapted the timestamp-sorted three-correct mastery streak and active/older/missed revision pool approach into `src/spelling/adaptive.ts` and the local queue in `engine.ts`. Weekly list/word/attempt organization informed our additive typed schema. Changes: independent/test evidence only, unique session IDs, explicit assisted/recognition counters, timed revisits, up to two older-list review slots, normalized shared word keys and reload-safe session snapshots. No upstream IndexedDB, router, UI, voice infrastructure or full framework was imported. New regression tests validate Hero Academy's distinct-session/reward/save requirements rather than importing incompatible upstream harnesses.
+
+### Brightleap — secondary foundation
+
+[brightleap-app/brightleap](https://github.com/brightleap-app/brightleap), pinned revision `cd3bee4b067a0170eff227e6c2e6f94cfc9fd25b`. MIT, Copyright (c) 2026 Brightleap. Full unmodified notice: `vendor/brightleap/LICENSE`; shipped at `public/licenses/Brightleap.txt`.
+
+Adapted the due/unseen/future queue tiers from `engine/spacedRep.js` and Fisher–Yates copying shuffle from `engine/shuffle.js` in `src/spelling/adaptive.ts`. Added a recently-missed tier and our per-word interval calculation. Inspected adaptive difficulty/audio-first practice as context; retained Hero Academy's existing local speech implementation and wrote the eight-mode interface and evidence/reward integration locally. No authentication, Supabase, backend, arcade, math content, assets or application shell was imported. Additional suggested spelling repositories were unnecessary.
+
 ## Bundled game code
 
 ### Super Kart 3D (V2 primary, saved ID `racer`)
@@ -49,7 +63,7 @@ Inspected availability, declared licenses, READMEs/package dependencies and rele
 | Candidate                    | Findings and decision                                                                                                                                                                                                          |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | binolgeorge/joju-learn       | Available; MIT code, CC BY-NC 4.0 content. Inspected README and procedural generator. Large engine tied to curriculum types, voice/server/optional Firebase. No code/content copied.                                           |
-| brightleap-app/brightleap    | Available; MIT. React/Vite with Supabase, aimed at Year 6 rather than first grade. No code/assets copied.                                                                                                                      |
+| brightleap-app/brightleap    | V1: investigated only. V3: selected MIT spaced-repetition/shuffle logic adapted; no backend, UI or assets copied. See above.                                                                                                                      |
 | JesseRWeigel/battlemath      | Available; MIT. Inspected package/src structure; React Native Web and additional app machinery. Original compact generator is quicker for the specified scope. No code/assets copied.                                          |
 | MaybeSword/math-practice     | Available, no declared repository license in API metadata. Not reused.                                                                                                                                                         |
 | h5p                          | Organization, not one application. Inspected h5p/h5p-php-library: GPL PHP platform/library requiring LMS integration and content packages. Does not fit static local-only Vite MVP. Not reused.                                |

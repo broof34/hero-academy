@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { WeeklyManager } from "./spelling/WeeklyManager";
 import { Check, Download, Plus, Trash2, ShieldCheck, X } from "lucide-react";
 import {
   freshState,
@@ -13,10 +14,12 @@ export function AdultGate({
   onAccept,
   onCancel,
   effort = false,
+  confirmLabel,
 }: {
   onAccept: () => void;
   onCancel: () => void;
   effort?: boolean;
+  confirmLabel?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -75,7 +78,7 @@ export function AdultGate({
           />
           {wrong && <p role="alert">Please ask your grown-up to try again.</p>}
           <button className="primary" type="submit">
-            {effort ? "Confirm effort" : "Unlock settings"}
+            {confirmLabel ?? (effort ? "Confirm effort" : "Unlock settings")}
           </button>
         </form>
         <small>A friendly gate, not a secure parental lock.</small>
@@ -144,6 +147,7 @@ export function Parent({
         <ShieldCheck size={42} />
       </header>
       <div className="parent-grid">
+        <WeeklyManager state={state} change={change} />
         <section className="panel">
           <h2>Learning & rewards</h2>
           <fieldset>
