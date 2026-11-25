@@ -1,5 +1,16 @@
 # Third-party code and asset attribution
 
+## Development design guidance
+
+Project-scoped, development-only skills from Leonxlnx/taste-skill (instruction-only
+adaptation), nextlevelbuilder/ui-ux-pro-max-skill and
+kylezantos/design-motion-principles are vendored under `.agents/skills/` with their
+MIT licenses. Pinned revisions, review scope and modifications are recorded in
+`docs/design-workflow.md` and `docs/design-resources.lock.json`. These files are
+not imported into the website or shipped as runtime dependencies.
+VoltAgent/awesome-claude-design and bergside/design-md-chrome informed project
+documentation; no catalog brand assets or Chrome extension code were imported.
+
 ## Weekly spelling logic (V3)
 
 ### SchoolWordList — primary foundation

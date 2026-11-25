@@ -70,6 +70,13 @@ npm run test:e2e
 
 Browser tests use installed Google Chrome (`channel: chrome`). For CI without Chrome, install it with `npx playwright install chrome` or change the channel to an installed Playwright browser. Weekly tests additionally cover all eight modes, repeated-letter tiles, one-letter tablet practice, parent editing/actual JSON transfer, hidden assessment answers/rewards, adult-assisted reloads, mastery and review queues, old-save hydration and duplicate submission protection. Tests cover a full five-question mission, retry behavior, reload persistence, ticket spending, live game adapters, expiry/unloading, adult homework confirmation, custom prompts, export, and tablet layout. Unit tests cover reward boundaries, full V1 save compatibility with either legacy game ID, local game registration/assets, settings normalization, and every learning skill at both math levels. The new browser suite actually drives the 3D kart against five AI opponents, flies/fires the space fighter, checks pause/fallback/expiry and unchanged ticket balances, verifies there are no missing game assets or external requests, and returns to learning.
 
+## Permanent design workflow
+
+Read [AGENTS.md](AGENTS.md) and [DESIGN.md](DESIGN.md) before visual work. Three
+project-scoped design skills live in `.agents/skills/` and travel with this repo.
+[Design workflow and resource review](docs/design-workflow.md) records installation,
+pinned licenses, local adaptations, discovery verification and update instructions.
+
 ## Project layout
 
 - `src/spelling/`: list schema/validation, pure adaptive engine, parent manager and eight-mode HQ.

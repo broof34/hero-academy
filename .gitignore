@@ -5,3 +5,5 @@ playwright-report/
 .DS_Store
 
 .superpowers/
+__pycache__/
+*.pyc
