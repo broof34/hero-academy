@@ -114,8 +114,13 @@ for (const [width, height] of [[390, 844], [768, 1024], [1280, 900]]) {
             }
           });
           await expect(retry).toBeVisible();
-          if (touch) await retry.tap();
-          else await retry.press("Enter");
+          if (touch) {
+            await retry.scrollIntoViewIfNeeded();
+            // The CDP swipe and the synchronous round above finish within one gesture window.
+            // Allow Chromium to finish processing that gesture before tapping in the opaque frame.
+            await page.waitForTimeout(650);
+            await retry.tap();
+          } else await retry.press("Enter");
           await expect(points).toHaveText("0");
           await expect(frame.getByRole("gridcell", { name: "2, Spark" })).toHaveCount(2);
         } else {
