@@ -17,11 +17,12 @@ import { redeemTicket } from "./model";
 import type { Change } from "./Parent";
 import { weeklyData } from "./spelling/engine";
 import { celebrate } from "./Effects";
+import { ReadAloud } from "./ReadAloud";
 
 const subjects = [
-  { id: "spelling", label: "Spelling", sub: "WORD POWER", icon: SpellCheck },
-  { id: "math", label: "Math", sub: "NUMBER POWER", icon: Calculator },
-  { id: "reading", label: "Reading", sub: "STORY POWER", icon: BookOpen },
+  { id: "spelling", label: "Spelling", icon: SpellCheck },
+  { id: "math", label: "Math", icon: Calculator },
+  { id: "reading", label: "Reading", icon: BookOpen },
 ] as const;
 type MenuProps = {
   state: State;
@@ -47,15 +48,11 @@ function SubjectTiles({
             aria-label={`Start ${s.label} mission`}
             onClick={() => choose(s.id)}
           >
-            <span className="tile-number" aria-hidden="true">
-              0{subjects.indexOf(s) + 1}
-            </span>
             <s.icon
               className="tile-icon"
               strokeWidth={1.7}
               aria-hidden="true"
             />
-            <span className="tile-sub">{s.sub}</span>
             <strong>{s.label}</strong>
             <ArrowUpRight className="tile-arrow" aria-hidden="true" />
           </button>
@@ -65,11 +62,7 @@ function SubjectTiles({
         onClick={arcade}
         aria-label="Explore games"
       >
-        <span className="tile-number" aria-hidden="true">
-          04
-        </span>
         <Gamepad2 className="tile-icon" strokeWidth={1.7} aria-hidden="true" />
-        <span className="tile-sub">PLAY IT YOUR WAY</span>
         <strong>Games</strong>
         <ArrowUpRight className="tile-arrow" aria-hidden="true" />
       </button>
@@ -84,6 +77,10 @@ export function HomeMenu(
   return (
     <div className="home-menu">
       <section className="home-scene" aria-labelledby="home-title">
+        <ReadAloud
+          text="Welcome to Hero Academy. Tap Continue learning, or choose Spelling, Math, Reading or Games."
+          settings={props.state.settings}
+        />
         <img
           className="multiverse-art"
           src={import.meta.env.BASE_URL + "art/rebel-cover.webp"}
@@ -95,18 +92,9 @@ export function HomeMenu(
           fetchPriority="high"
         />
         <div className="scene-shade" />
-        <div className="issue-stamp" aria-hidden="true">
-          VOL. 04
-          <br />
-          <b>
-            MAKE SOME
-            <br />
-            HERO HISTORY.
-          </b>
-        </div>
         <div className="scene-copy">
           <p className="edition-label">
-            <span /> MULTIVERSE EDITION
+            <Zap size={14} aria-hidden="true" /> PROJECT REBEL
           </p>
           <h1 id="home-title">
             YOUR WORLD.
@@ -127,20 +115,13 @@ export function HomeMenu(
             </span>
             <Play fill="currentColor" aria-hidden="true" />
           </button>
-          <span className="scene-caption">SMALL MISSIONS. BIG ENERGY.</span>
-        </div>
-        <div className="scene-coordinate" aria-hidden="true">
-          HERO HQ / EARTH 01 <Zap size={14} />
         </div>
       </section>
       <section
         className="home-selection"
         aria-label="Choose your next adventure"
       >
-        <div className="selection-heading">
-          <span>CHOOSE YOUR NEXT MOVE</span>
-          <span aria-hidden="true">↓ LET'S GO</span>
-        </div>
+        <h2 className="selection-heading">Choose your next move</h2>
         <SubjectTiles {...props} />
       </section>
       <div className="menu-utilities">
@@ -159,7 +140,6 @@ export function HomeMenu(
           <Coffee size={20} />
           <span>Take a break</span>
         </button>
-        <span className="local-note">NO ADS. NO ACCOUNTS. ALL YOU.</span>
       </div>
     </div>
   );

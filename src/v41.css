@@ -206,19 +206,19 @@ button:not(:disabled):active {
 #main-content.screen-home {
   position: relative;
 }
-#main-content.screen-home > .read-aloud {
+.home-scene > .read-aloud {
   position: absolute;
   right: 20px;
   top: 14px;
   z-index: 5;
   max-width: 360px;
 }
-#main-content.screen-home > .read-aloud .speech-replay {
+.home-scene > .read-aloud .speech-replay {
   background: #080c18de;
   border-color: #6c7d9b;
   color: #f4f6ff;
 }
-#main-content.screen-home > .read-aloud .fine-print {
+.home-scene > .read-aloud .fine-print {
   padding: 12px;
   background: #080c18ed;
   border: 1px solid #526681;
@@ -479,20 +479,6 @@ button:not(:disabled):active {
     width: 290px;
     top: 14%;
   }
-  #main-content.screen-home > .read-aloud {
-    top: auto;
-    bottom: 14px;
-    right: 20px;
-    margin: 0;
-    max-width: calc(100% - 40px);
-    position: relative;
-    left: 20px;
-    justify-content: flex-start;
-    padding-top: 15px;
-  }
-  #main-content.screen-home > .read-aloud .fine-print {
-    width: 100%;
-  }
   #main-content > .read-aloud {
     justify-content: flex-start;
     margin-bottom: 20px;
@@ -646,7 +632,7 @@ button:not(:disabled):active {
 }
 
 @media (max-width: 600px) {
-  #main-content.screen-home > .read-aloud {
+  .home-scene > .read-aloud {
     position: absolute;
     top: 14px;
     bottom: auto;
@@ -655,12 +641,12 @@ button:not(:disabled):active {
     padding: 0;
     max-width: calc(100% - 32px);
   }
-  #main-content.screen-home .speech-replay {
+  .home-scene .speech-replay {
     width: 48px;
     height: 48px;
     padding: 12px;
   }
-  #main-content.screen-home .replay-label {
+  .home-scene .replay-label {
     position: absolute;
     width: 1px;
     height: 1px;

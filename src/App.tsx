@@ -190,9 +190,12 @@ export default function App() {
           onClick={() => navigate("home")}
           aria-label="Hero Academy home"
         >
-          <span>HERO</span>
-          <strong>ACADEMY</strong>
-          <small>MULTIVERSE EDITION</small>
+          <img
+            src={import.meta.env.BASE_URL + "brand/navigation.svg"}
+            width="218"
+            height="87"
+            alt=""
+          />
         </button>
         <nav className="primary-nav" aria-label="Main navigation">
           {(
@@ -286,7 +289,11 @@ export default function App() {
         </div>
       </header>
       <div className="main-shell">
-        <main id="main-content" tabIndex={-1} className={`screen-${screen}`}>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className={state.session ? "screen-session" : `screen-${screen}`}
+        >
           {savedNotice && (
             <div className="notice-banner" role="status">
               Settings saved on this device.
@@ -299,25 +306,20 @@ export default function App() {
             </div>
           )}
           {!state.session &&
-            ["home", "missions", "arcade", "rewards", "complete"].includes(
+            ["missions", "arcade", "rewards", "complete"].includes(
               screen,
             ) && (
               <ReadAloud
                 text={
-                  screen === "home"
-                    ? "Welcome to Hero Academy. Tap Continue learning, or choose Spelling, Math, Reading or Games."
-                    : screen === "missions"
-                      ? "Choose a subject to practice. Spelling HQ has your school words. Homework starts a focus timer."
-                      : screen === "arcade"
-                        ? "Choose a game to see how to play. You need one ticket to launch a game."
-                        : screen === "rewards"
-                          ? "Earn stars by practicing. Trade stars for a game ticket when it is ready."
-                          : screen === "complete"
-                            ? "Mission complete. Tap Back to base to choose your next activity."
-                            : "Choose a training mode for your school words. Tap Hear instructions in an activity for help."
+                  screen === "missions"
+                    ? "Choose a subject to practice. Spelling HQ has your school words. Homework starts a focus timer."
+                    : screen === "arcade"
+                      ? "Choose a game to see how to play. You need one ticket to launch a game."
+                      : screen === "rewards"
+                        ? "Earn stars by practicing. Trade stars for a game ticket when it is ready."
+                        : "Mission complete. Tap Back to base to choose your next activity."
                 }
                 settings={state.settings}
-                auto={screen !== "spelling-hq"}
               />
             )}
           {storageError && (
@@ -444,7 +446,7 @@ export default function App() {
                   )}
                   <div className="game-cards arcade-grid">
                     {(Object.keys(games) as GameId[]).map((g) => (
-                      <article className="game-card" key={g}>
+                      <article className={`game-card game-card-${g}`} key={g}>
                         <GamePreview game={g} />
                         <div className="arcade-card-content">
                           <p className="eyebrow">{games[g].tag}</p>

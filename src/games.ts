@@ -19,7 +19,7 @@ export const games: Record<GameId, GameDefinition> = {
       "Six racers. Two circuits. One epic race. Drift into the lead and leave your rivals in the dust.",
     path: "games/kart/index.html",
     tag: "3D KART RACING",
-    preview: "art/kart-gameplay.jpg",
+    preview: "art/kart-gameplay.webp",
     brief: "Before you race",
     features: ["AI rivals", "Drift & boost", "Touch controls"],
     controls: [
@@ -38,7 +38,7 @@ export const games: Record<GameId, GameDefinition> = {
       "Pilot a starfighter through enemy waves. Collect power-ups. Keep the galaxy safe.",
     path: "games/galactic/index.html",
     tag: "SPACE ACTION",
-    preview: "art/patrol-gameplay.jpg",
+    preview: "art/patrol-gameplay.webp",
     brief: "Before you fly",
     features: ["Enemy waves", "Ship upgrades", "Auto-fire"],
     controls: [
