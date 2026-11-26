@@ -18,11 +18,15 @@ import { games } from "./games";
 import { ReadAloud } from "./ReadAloud";
 import {
   clock,
+  MOTO_PROGRESS_KEY,
   remainingSeconds,
   type GameId,
   type State,
   type Session,
 } from "./model";
+// Each of the 16 upstream replay tokens is capped at 87,384 characters.
+const MOTO_PROGRESS_LIMIT = 1_500_000;
+
 export function GamePreview({ game }: { game: GameId }) {
   const g = games[game];
   return (
@@ -170,11 +174,24 @@ export function GameSession({
     effectsVolume: gameEffects ? settings.effectsVolume : 0,
     musicVolume: settings.musicSound ? settings.musicVolume : 0,
   };
-  const send = () =>
+  const send = (initializeMoto = false) => {
+    let initialProgress: { motoProgress?: string | null } = {};
+    if (initializeMoto) {
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(MOTO_PROGRESS_KEY);
+      } catch {
+        // Browser storage is optional for a paid session.
+      }
+      initialProgress = {
+        motoProgress: stored && stored.length <= MOTO_PROGRESS_LIMIT ? stored : null,
+      };
+    }
     frame.current?.contentWindow?.postMessage(
-      { type: "academy:settings", ...settingsRef.current },
+      { type: "academy:settings", ...settingsRef.current, ...initialProgress },
       "*",
     );
+  };
   useEffect(() => {
     const tick = () => setSeconds(remainingSeconds(session));
     tick();
@@ -192,10 +209,27 @@ export function GameSession({
         send();
       }
       if (e.data?.type === "academy:error") setError(true);
+      if (session.game !== "moto") return;
+      if (e.data?.type === "academy:moto-load") send(true);
+      if (e.data?.type === "academy:moto-toggle-mute") {
+        if (settingsRef.current.muted) setGameEffects(true);
+        setMuted((value) => !value);
+      }
+      if (e.data?.type === "academy:moto-save") {
+        const progress = e.data.progress;
+        if (typeof progress !== "string" || progress.length > MOTO_PROGRESS_LIMIT) return;
+        try {
+          const record = JSON.parse(progress);
+          if (record && typeof record === "object" && !Array.isArray(record))
+            localStorage.setItem(MOTO_PROGRESS_KEY, progress);
+        } catch {
+          // Invalid data or a full/disabled store must not affect Academy progress.
+        }
+      }
     }
     window.addEventListener("message", receive);
     return () => window.removeEventListener("message", receive);
-  }, []);
+  }, [session.game]);
   useEffect(() => {
     send();
   }, [
@@ -219,7 +253,7 @@ export function GameSession({
     return () => document.body.classList.remove("expanded-game");
   }, [expanded]);
   return (
-    <section className={`game-session panel ${expanded ? "expanded" : ""}`}>
+    <section className={`game-session panel ${expanded ? "expanded" : ""}`} data-game={session.game}>
       <div className="session-head">
         <div>
           <p className="eyebrow">ADVENTURE IN PROGRESS</p>
@@ -289,7 +323,7 @@ export function GameSession({
             }
             sandbox="allow-scripts"
             referrerPolicy="no-referrer"
-            onLoad={send}
+            onLoad={() => send(session.game === "moto")}
           />
         )}
         {paused && (

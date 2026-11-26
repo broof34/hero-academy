@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import {
   freshState,
+  MOTO_PROGRESS_KEY,
   grantStars,
   updateSettings,
   type State,
@@ -338,8 +339,14 @@ export function Parent({
                 <button
                   className="secondary"
                   onClick={() => {
-                    change(() => freshState());
-                    setSettings(freshState().settings);
+                    try {
+                      localStorage.removeItem(MOTO_PROGRESS_KEY);
+                    } catch {
+                      // Reset in-memory progress even when browser storage is blocked.
+                    }
+                    const resetState = freshState();
+                    change(() => resetState);
+                    setSettings(resetState.settings);
                     setReset(false);
                     setNotice("Local progress reset.");
                   }}

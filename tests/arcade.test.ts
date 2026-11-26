@@ -8,7 +8,7 @@ import {
   remainingSeconds,
 } from "../src/model";
 it("registers upgraded games under the legacy identifiers", () => {
-  expect(Object.keys(games)).toEqual(["racer", "space", "rooftop", "smash", "flight", "merge"]);
+  expect(Object.keys(games)).toEqual(["racer", "space", "rooftop", "smash", "flight", "merge", "moto"]);
   expect(games.racer).toMatchObject({
     title: "Super Kart 3D",
     path: "games/kart/index.html",
@@ -52,7 +52,7 @@ it("preserves complete V1 saves including either active game deadline", () => {
   }
 });
 it("restores new paid games without spending again", () => {
-  for (const game of ["rooftop", "smash", "flight", "merge"] as const) {
+  for (const game of ["rooftop", "smash", "flight", "merge", "moto"] as const) {
     const state = startSession({ ...freshState(), tickets: 3 }, game, 1000);
     const restored = hydrate(JSON.parse(JSON.stringify(state)));
     expect(restored.session).toEqual({ game, endsAt: 181000 });

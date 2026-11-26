@@ -97,4 +97,21 @@ export const games: Record<GameId, GameDefinition> = {
     controls: [{ key: "↑ → ↓ ←", action: "Slide all tiles that way" }],
     touch: "Swipe the board or tap an arrow button. When equal numbers meet, they join into a bigger power tile.",
   },
+  moto: {
+    title: "Moto Rush X3",
+    description: "Ride dirt trails, balance the bike in the air, and unlock 16 stunt courses.",
+    path: "games/moto/index.html",
+    preview: "art/moto-gameplay.webp",
+    tag: "MOTORCYCLE TRIALS",
+    brief: "Before you ride",
+    features: ["16 courses", "Checkpoints", "Touch controls"],
+    controls: [
+      { key: "↑ / W", action: "Hold to give the bike gas" },
+      { key: "↓ / S", action: "Brake or reverse" },
+      { key: "← → / A D", action: "Lean back or forward" },
+      { key: "R", action: "Restart the course" },
+      { key: "ARROWS / ENTER", action: "Choose a course or world, then start" },
+    ],
+    touch: "Tap the first course to start. Hold GAS to ride and BRAKE to slow down. Use the two lean arrows to land on both wheels. Tap the screen after a crash to retry.",
+  },
 };

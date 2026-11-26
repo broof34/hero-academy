@@ -22,7 +22,7 @@ async function openArcade(page: Page) {
   }, key);
   await page.goto("./");
   await page.getByRole("button", { name: "Arcade", exact: true }).click();
-  await expect(page.locator(".arcade-grid article")).toHaveCount(6);
+  await expect(page.locator(".arcade-grid article")).toHaveCount(7);
 }
 
 async function launch(page: Page, title: string) {

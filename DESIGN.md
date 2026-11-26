@@ -29,7 +29,7 @@ system and its tokens live in `src/rebel.css`.
 Use `navigation.svg` for the cutout wordmark and split-ink lightning signal in
 the masthead, `wordmark.svg` for startup, and `wordmark-mono.svg` for monochrome
 placement. `signal.svg` and the favicon carry the standalone bolt. The cover
-uses responsive local WebP at 720w and 1440w. The six game previews are WebP
+uses responsive local WebP at 720w and 1440w. The arcade previews are WebP
 captures from the actual games. Art and font provenance are documented in
 `public/art/ATTRIBUTION.md` and `THIRD_PARTY.md`.
 

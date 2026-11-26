@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: ["production-smoke.spec.ts", "arcade-v6.spec.ts"],
+  testMatch: ["production-smoke.spec.ts", "arcade-v6.spec.ts", "moto.spec.ts"],
   workers: 1,
   timeout: 60000,
   retries: process.env.CI ? 2 : 0,

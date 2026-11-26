@@ -30,7 +30,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:games
-      - run: git diff --exit-code -- public/games/kart public/games/galactic
+      - run: git diff --exit-code -- public/games/kart public/games/galactic public/games/moto
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test

@@ -163,3 +163,51 @@ recordings, music, art packs, external services or runtime dependencies.
 - [xp187/dino-run](https://github.com/xp187/dino-run) (MIT) offers a dependency-free runner with its own Web Audio and weather effects. Its jump-and-duck input and larger simulation add complexity to the one-button brief. [parthjpatel99/endless-runner](https://github.com/parthjpatel99/endless-runner) (MIT) features touch controls and collision tests but also includes an online high-score API. gamelabz's small, local Canvas implementation fit the arcade host more directly.
 - LittleJS's [Breakout example](https://github.com/KilledByAPixel/LittleJS/tree/2b8b6731329df12401f4552d132da4513fdd634c/examples/breakout) was also considered. Gordon's standalone collision and bounce code fit the existing plain JavaScript iframe path without another engine or upstream art.
 - [pemmyz/js_breakout](https://github.com/pemmyz/js_breakout) ships an MIT license and touch support. Gordon's swept collision code provided a direct fit for the smaller playfield and wide beginner paddle. [davidcmonson/flappy-bird](https://github.com/davidcmonson/flappy-bird) and [josedasilva11/2048-game](https://github.com/josedasilva11/2048-game) describe MIT terms in their READMEs but have no separate license files. Their code and media were excluded in favor of the verified LittleJS and Cirulli sources.
+
+## Moto Rush X3 motorcycle trials
+
+[QemmHD/motogame, Moto Rush X3 v1.8.1](https://github.com/QemmHD/motogame/tree/c0fb2fce24d9d08d90b559254f907d1528112b3b)
+is pinned at `c0fb2fce24d9d08d90b559254f907d1528112b3b` from
+`agent/motorush-v181-fast-failure`. The license at that revision is ISC,
+copyright 2026 QemmHD. The default branch is a placeholder and the separate
+Pages branch lacks the source branch's license file. The matching ISC notice
+ships at `public/games/moto/LICENSE.txt`.
+
+- **Levels and visuals.** All 16 original courses and reference tapes,
+  sprites, textures, scenery, crash rig, menus and animations come from this
+  revision. The README's originality statement, the upstream asset inventory
+  in `vendor/moto-rush/assets.csv` and the [initial art commit](https://github.com/QemmHD/motogame/commit/a2c4333)
+  identify project-authored tracks and art generated with Higgsfield/Nano Banana.
+  [Higgsfield's output terms](https://higgsfield.ai/creator-hub/help-center/account/who-owns-my-generations-and-can-i-use-them-commercially)
+  permit reuse of generated outputs. The arcade WebP is an actual gameplay
+  capture from the embedded build. In-game fonts use browser/OS system fonts.
+- **Audio.** Engine, landing, crash, stunt and finish sounds are the upstream
+  ISC-licensed Web Audio synthesis. The [two Sonilo-generated music tracks](https://github.com/QemmHD/motogame/commit/1093e6c)
+  were omitted along with the music-volume row because their redistribution
+  rights could not be verified against [Sonilo's plan-based terms](https://sonilo.com/licensing).
+- **Integration.** The upstream Canvas engine runs as a local classic bundle
+  generated from `vendor/moto-rush` by `scripts/build-moto.mjs`. Gold Run data
+  is bundled to support the opaque iframe. The embedded build removes PWA
+  registration and install promotion, forwards the Academy pause, mute,
+  effects level and motion preferences, and defaults vibration off. Both mute
+  buttons use the same host setting. The compact menu and expanded viewport
+  keep course cards and ride controls within reach, and the course picker
+  also accepts arrow keys and Enter. A
+  source-checked bridge stores motorcycle progress locally under
+  `hero-academy:moto-rush:v1`. Unlocks, records, replays and game settings
+  survive exit; the current run restarts on reload. The separate game state
+  lives outside the Academy learning-progress export and clears on a full reset.
+- **Other candidates.** [2bt/bike](https://github.com/2bt/bike) has MIT code
+  and seven playable levels but bundles the personal-use Copilme typeface
+  inside its WebAssembly binary and uses a remote engine loader.
+  [Bike vs Gravity](https://github.com/matyuschenko/bike-vs-gravity) has an
+  itch.io browser build and Unity source without an explicit repository
+  license. [Wheelie!](https://github.com/MihailPreis/Wheelie) has GPL-2.0
+  port code, but lists original Gravity Defied assets as belonging to
+  Codebrew and bundles community packs without a blanket grant.
+  [jgzuo/moto-racer](https://github.com/jgzuo/moto-racer) describes MIT in
+  its README and is a top-down oval racer. Independently evaluated
+  [Dirty X Rush](https://github.com/iiTzShubham/dirty-x-rush) had no repository
+  license, [elma-web](https://github.com/spryt/elma-web) explicitly excludes
+  bundled art, levels and audio from its MIT code license, and
+  [X-Moto](https://github.com/xmoto/xmoto) is a native desktop project.

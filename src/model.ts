@@ -1,7 +1,7 @@
 import type { WeeklyData } from "./spelling/types";
 import { hydrateWeekly } from "./spelling/data";
 export type Subject = "math" | "spelling" | "reading";
-export const gameIds = ["racer", "space", "rooftop", "smash", "flight", "merge"] as const;
+export const gameIds = ["racer", "space", "rooftop", "smash", "flight", "merge", "moto"] as const;
 export type GameId = (typeof gameIds)[number];
 export type Settings = {
   subjects: Subject[];
@@ -44,6 +44,7 @@ export type State = {
   weeklySpelling?: WeeklyData;
 };
 export const STORAGE_KEY = "hero-academy:v1";
+export const MOTO_PROGRESS_KEY = "hero-academy:moto-rush:v1";
 export const freshState = (): State => ({
   version: 1,
   stars: 0,
