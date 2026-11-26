@@ -47,7 +47,7 @@ export function GameBriefing({
 }) {
   const game = games[id];
   return (
-    <div className="briefing">
+    <div className="briefing" data-game={id}>
       <ReadAloud
         settings={state.settings}
         text={`${game.title}. ${game.touch} You need one ticket to launch. Your timer starts when you press Launch game.`}

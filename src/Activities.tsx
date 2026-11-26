@@ -36,11 +36,11 @@ export function SkillChooser({
 }) {
   const [topic, setTopic] = useState("mix");
   return (
-    <div className="focused">
+    <div className="focused" data-subject={subject}>
       <button className="text-button" onClick={onBack}>
         <ArrowLeft size={18} /> Back to base
       </button>
-      <section className={`mission-intro panel ${subject}`}>
+      <section className="mission-intro panel">
         <MissionArt kind={subject} />
         <p className="eyebrow">MISSION BRIEFING</p>
         <h1>
@@ -143,7 +143,7 @@ export function Mission({
     setTiles([]);
   }
   return (
-    <div className="focused">
+    <div className="focused" data-subject={q.subject}>
       <div className="mission-top">
         <button className="text-button" onClick={onBack}>
           <ArrowLeft size={18} /> Save & leave

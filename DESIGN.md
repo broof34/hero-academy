@@ -43,16 +43,26 @@ captures from the actual games. Art and font provenance are documented in
   Icons, labels and the current tab remain visible. The destination bar moves
   below the masthead on tablet and to the bottom on phones. Currency and audio
   controls stay in the masthead.
-- **Learning.** Paper banners identify the area. Questions and answer controls
-  sit on solid dark surfaces. Keep instruction type conventional, show one
-  task at a time and reserve texture for the surrounding canvas and card edges.
+- **Learning.** Spelling red, Math cyan and Reading pink connect each subject
+  card to its original cutout mission art, progress strip, and answer controls.
+  Keep instructions and answer keys on solid surfaces. Use warm paper for
+  reading passages and movable letters. A separate green answer state pairs
+  with written feedback. The homework and break clocks keep their lime accent
+  and large tabular digits within a solid panel.
+- **Spelling HQ.** The current list and mastery tally sit side by side whenever
+  space allows. Mode cards use a solid icon stamp and a title above their
+  descriptions. Preserve the familiar keyboard layout and keep the practice
+  test’s answers and correctness signals hidden until the report.
 - **Arcade and Rewards.** Use offset game posters with a shared preview, title,
   description, cost and Play hierarchy. Briefings carry the same display type
   and a ticket-edge launch panel. Keep the timer and launch conditions clearly
-  labeled. Rewards pair a ticket counter with the lifetime record.
+  labeled. Carry the kart’s red and the patrol’s cyan through the game cards and
+  briefings. Rewards pair the perforated ticket panel with a paper lifetime
+  tally and subject-colored rows.
 - **Grown-ups.** Mute the backdrop quickly below the paper title. Keep familiar
   sentence-case headings, solid form fields, predictable jump links and visible
-  status or validation text.
+  status or validation text. Pair section jump labels with icons and use the
+  same solid wells for audio preferences in the dashboard and mixer.
 
 ## Interaction and verification
 

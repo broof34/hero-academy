@@ -126,19 +126,21 @@ export function HomeMenu(
       </section>
       <div className="menu-utilities">
         {canSpell && (
-          <button onClick={props.spelling}>
+          <button className="spelling-feature" onClick={props.spelling}>
             <SpellCheck size={20} />
             <span>Spelling HQ</span>
-            <ArrowUpRight size={16} />
+            <ArrowUpRight size={16} aria-hidden="true" />
           </button>
         )}
-        <button onClick={props.homework}>
+        <button className="homework-feature" onClick={props.homework}>
           <Timer size={20} />
           <span>Homework</span>
+          <ArrowUpRight size={16} aria-hidden="true" />
         </button>
         <button onClick={props.takeBreak}>
           <Coffee size={20} />
           <span>Take a break</span>
+          <ArrowUpRight size={16} aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -173,7 +175,7 @@ export function LearnMenu(props: MenuProps) {
           </button>
         )}
         <button
-          className="learn-feature"
+          className="learn-feature homework-feature"
           onClick={props.homework}
           aria-label="Homework"
         >
@@ -269,7 +271,7 @@ export function Rewards({
           {subjects
             .filter((s) => state.settings.subjects.includes(s.id))
             .map((s) => (
-              <div className="record-subject" key={s.id}>
+              <div className="record-subject" data-subject={s.id} key={s.id}>
                 <s.icon />
                 <span>{s.label}</span>
                 <strong>{state.stats[s.id].correct}</strong>

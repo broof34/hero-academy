@@ -2,7 +2,17 @@ import { useRef, useState } from "react";
 import { useModalFocus } from "./useModalFocus";
 import { AudioFields } from "./AudioControls";
 import { WeeklyManager } from "./spelling/WeeklyManager";
-import { Check, Download, Plus, Trash2, ShieldCheck, X } from "lucide-react";
+import {
+  ChartNoAxesColumn,
+  Check,
+  Download,
+  Plus,
+  Settings2,
+  ShieldCheck,
+  SpellCheck,
+  Trash2,
+  X,
+} from "lucide-react";
 import {
   freshState,
   grantStars,
@@ -143,10 +153,18 @@ export function Parent({
         <ShieldCheck size={42} />
       </header>
       <nav className="adult-jumps" aria-label="Grown-up sections">
-        <a href="#adult-settings">Learning & rewards</a>
-        <a href="#adult-spelling">Spelling lists</a>
-        <a href="#adult-progress">Progress</a>
-        <a href="#adult-data">Export & reset</a>
+        <a href="#adult-settings">
+          <Settings2 size={19} aria-hidden="true" /> Learning & rewards
+        </a>
+        <a href="#adult-spelling">
+          <SpellCheck size={19} aria-hidden="true" /> Spelling lists
+        </a>
+        <a href="#adult-progress">
+          <ChartNoAxesColumn size={19} aria-hidden="true" /> Progress
+        </a>
+        <a href="#adult-data">
+          <Download size={19} aria-hidden="true" /> Export & reset
+        </a>
       </nav>
       <div className="parent-grid">
         <WeeklyManager state={state} change={change} />
