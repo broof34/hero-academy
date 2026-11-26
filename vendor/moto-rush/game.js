@@ -2198,8 +2198,15 @@ function drawMenu() {
   if (IMG.wheel) { const d = Math.min(96, cssW * 0.16); ctx.save(); ctx.globalAlpha = 0.9;
     ctx.translate(cssW / 2, cssH * 0.18 - Math.min(64, cssW * 0.11) * 0.35); ctx.rotate(reduced() ? 0 : performance.now() / 700);
     ctx.drawImage(IMG.wheel, -d / 2, -d / 2, d, d); ctx.restore(); }
-  ctx.fillStyle = '#fff'; ctx.font = '900 ' + Math.min(64, cssW * 0.11) + 'px system-ui';
-  ctx.lineWidth = 6; ctx.strokeStyle = '#1b1f2a'; ctx.strokeText(STR.title, cssW / 2, cssH * 0.18); ctx.fillStyle = '#ffd23e'; ctx.fillText(STR.title, cssW / 2, cssH * 0.18);
+  const titleY = cssH * 0.18;
+  let titleSize = Math.min(64, cssW * 0.11);
+  ctx.font = `900 ${titleSize}px system-ui`;
+  if (titleY - titleSize < 54 && cssW >= 480) {
+    titleSize *= Math.min(1, (cssW - 238) / ctx.measureText(STR.title).width);
+    ctx.font = `900 ${titleSize}px system-ui`;
+  }
+  ctx.lineWidth = 6; ctx.strokeStyle = '#1b1f2a'; ctx.strokeText(STR.title, cssW / 2, titleY);
+  ctx.fillStyle = '#ffd23e'; ctx.fillText(STR.title, cssW / 2, titleY);
   ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.font = '600 16px system-ui'; ctx.fillText(STR.tagline, cssW / 2, cssH * 0.18 + 30);
   ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.font = '600 12px ui-monospace, monospace';
   ctx.fillText(BUILD, cssW / 2, cssH - 14);
