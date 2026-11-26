@@ -1,4 +1,4 @@
-# Hero Academy V5 · Project REBEL
+# Hero Academy V6 · Project REBEL
 
 Hero Academy is a superhero learning game for a first grader and the grown-up
 helping them. Project REBEL borrows the graphic language of punk comics through
@@ -29,7 +29,7 @@ system and its tokens live in `src/rebel.css`.
 Use `navigation.svg` for the cutout wordmark and split-ink lightning signal in
 the masthead, `wordmark.svg` for startup, and `wordmark-mono.svg` for monochrome
 placement. `signal.svg` and the favicon carry the standalone bolt. The cover
-uses responsive local WebP at 720w and 1440w. The two game previews are WebP
+uses responsive local WebP at 720w and 1440w. The six game previews are WebP
 captures from the actual games. Art and font provenance are documented in
 `public/art/ATTRIBUTION.md` and `THIRD_PARTY.md`.
 
@@ -57,7 +57,11 @@ captures from the actual games. Art and font provenance are documented in
   description, cost and Play hierarchy. Briefings carry the same display type
   and a ticket-edge launch panel. Keep the timer and launch conditions clearly
   labeled. Carry the kart’s red and the patrol’s cyan through the game cards and
-  briefings. Rewards pair the perforated ticket panel with a paper lifetime
+  briefings. Use a pink skyline for Rooftop Rush, orange energy bricks for
+  Power Smash, lime gates against a teal sky for Hero Flight, and warm yellow
+  trim with numbered power tiles for Power Merge. Keep touch controls outside
+  the playfield and reserve motion for gameplay and brief success feedback.
+  Rewards pair the perforated ticket panel with a paper lifetime
   tally and subject-colored rows.
 - **Grown-ups.** Mute the backdrop quickly below the paper title. Keep familiar
   sentence-case headings, solid form fields, predictable jump links and visible

@@ -146,10 +146,16 @@ export function GameSession({
   const [gameEffects, setGameEffects] = useState(settings.effectsSound);
   const frame = useRef<HTMLIFrameElement>(null);
   const game = games[session.game];
-  const reducedMotion =
-    settings.reducedMotion ||
-    (typeof matchMedia === "function" &&
-      matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [systemMotion, setSystemMotion] = useState(
+    () => matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  useEffect(() => {
+    const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const change = () => setSystemMotion(preference.matches);
+    preference.addEventListener("change", change);
+    return () => preference.removeEventListener("change", change);
+  }, []);
+  const reducedMotion = settings.reducedMotion || systemMotion;
   const settingsRef = useRef({
     paused,
     muted,
@@ -275,6 +281,7 @@ export function GameSession({
           <iframe
             key={fallback ? "fallback" : "main"}
             ref={frame}
+            inert={paused}
             title={game.title}
             src={
               import.meta.env.BASE_URL +
@@ -299,7 +306,9 @@ export function GameSession({
       <div className="session-footer">
         <p className="fine-print">
           {error
-            ? "This game could not start. Try 2D mode below."
+            ? game.fallbackPath && !fallback
+              ? "This game could not start. Try 2D mode below."
+              : "This game could not start."
             : ready
               ? "Controls stay inside your game."
               : "Loading your adventure…"}{" "}

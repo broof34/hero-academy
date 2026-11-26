@@ -133,3 +133,33 @@ Speech uses only browser-reported local English voices and does not redistribute
   Project REBEL SVG illustrations and cover provenance are documented in
   `public/art/ATTRIBUTION.md`. Existing Lucide icons and CSS animation are
   used in place of adding a shader, drawing or animation runtime.
+
+## V6 arcade expansion
+
+Only the code listed below was taken from the game upstreams. Each game ships
+its license in its own folder under `public/games/`.
+
+| Game and saved ID | Pinned source and license | Reused and adapted |
+| --- | --- | --- |
+| Rooftop Rush (`rooftop`) | [gamelabz/html5-game-endless-runner](https://github.com/gamelabz/html5-game-endless-runner/tree/2cb8756a1ab38956682f8ab0e64f5d68bc3c4cbd), MIT, copyright 2026 gamelabz | Retained jump/gravity, procedural obstacle spawning, speed ramp, box collision and cleanup from `game.js`. Simplified to one jump control, added a fixed opening barrier, forgiving hitboxes and a slower capped ramp, and replaced the frame counter with obstacles cleared. Removed upstream storage and page markup. |
+| Power Smash (`smash`) | [jakesgordon/javascript-breakout](https://github.com/jakesgordon/javascript-breakout/tree/eed59e2affa9423b93d2ac8ff93061bb88b33284), MIT text, copyright 2011–2016 Jake Gordon and contributors | Imported `intercept` and `ballIntercept` from `game.js` and adapted the nearest-target sweep, paddle deflection and remaining-motion update from `breakout.js`. Added a wider paddle, slower serve, three-ball opening and original brick arrangements. Upstream sounds have separate CC BY-ND terms and were excluded. The mixed upstream LICENSE is retained in full. |
+| Hero Flight (`flight`) | [KilledByAPixel/LittleJS](https://github.com/KilledByAPixel/LittleJS/tree/2b8b6731329df12401f4552d132da4513fdd634c), MIT, copyright 2021 Frank Force | Ported `examples/shorts/flappyGame.js`'s fixed-horizontal-position player, reset-on-boost velocity, gravity and translating wall pairs. Replaced the LittleJS object wrapper with the shared iframe tick and simple overlap checks. Added wide gates, bounded opening changes, a gates-cleared score and manual retry. The engine distribution and upstream tiles were excluded. |
+| Power Merge (`merge`) | [gabrielecirulli/2048](https://github.com/gabrielecirulli/2048/tree/478b6ec346e3787f589e4af751378d06ded4cbbc), MIT, copyright 2014 Gabriele Cirulli | Retained Grid, Tile, random tile generation, traversal and single-merge rules from `js/`. Replaced input, rendering and persistence adapters and started with a guaranteed match. The first goal is 64 and play continues past it. Upstream branding, styles, fonts and icons were excluded. |
+
+The game canvases, characters, skyline, court and gate graphics are original
+Hero Academy artwork in the game's JavaScript and `public/games/rebel/draw.js`.
+Power Merge's tiles use original CSS and system-rendered numbers and symbols.
+The WebP previews under `public/art/` were captured from these playable iframes.
+Standard browser/OS fonts render the four games. The surrounding Academy keeps its
+existing licensed local fonts listed above. Each game uses original Web Audio
+oscillator envelopes in `public/games/rebel/arcade.js`; the release includes no new
+recordings, music, art packs, external services or runtime dependencies.
+
+### Other V6 candidates
+
+- [ellisonleao/clumsy-bird](https://github.com/ellisonleao/clumsy-bird) has a GPL-3.0 repository license and bundles melonJS, artwork, fonts and audio. The MIT LittleJS flight example supplies comparable one-touch mechanics with a smaller adaptation and no need to redistribute those assets.
+- [jakesgordon/javascript-tetris](https://github.com/jakesgordon/javascript-tetris) has an MIT code license. Falling pieces and rotation would add a second timed arcade challenge and more controls. Power Merge offers an untimed option. Its texture and other assets were excluded with the game.
+- [michelpereira/awesome-open-source-games](https://github.com/michelpereira/awesome-open-source-games) is a CC0 directory. Linked games have their own licensing requirements. No material from the directory was copied.
+- [xp187/dino-run](https://github.com/xp187/dino-run) (MIT) offers a dependency-free runner with its own Web Audio and weather effects. Its jump-and-duck input and larger simulation add complexity to the one-button brief. [parthjpatel99/endless-runner](https://github.com/parthjpatel99/endless-runner) (MIT) features touch controls and collision tests but also includes an online high-score API. gamelabz's small, local Canvas implementation fit the arcade host more directly.
+- LittleJS's [Breakout example](https://github.com/KilledByAPixel/LittleJS/tree/2b8b6731329df12401f4552d132da4513fdd634c/examples/breakout) was also considered. Gordon's standalone collision and bounce code fit the existing plain JavaScript iframe path without another engine or upstream art.
+- [pemmyz/js_breakout](https://github.com/pemmyz/js_breakout) ships an MIT license and touch support. Gordon's swept collision code provided a direct fit for the smaller playfield and wide beginner paddle. [davidcmonson/flappy-bird](https://github.com/davidcmonson/flappy-bird) and [josedasilva11/2048-game](https://github.com/josedasilva11/2048-game) describe MIT terms in their READMEs but have no separate license files. Their code and media were excluded in favor of the verified LittleJS and Cirulli sources.

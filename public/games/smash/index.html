@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'">
+    <title>Power Smash · Hero Academy</title>
+    <link rel="stylesheet" href="../rebel/game.css">
+    <script defer src="../rebel/arcade.js"></script>
+    <script defer src="../rebel/draw.js"></script>
+    <script defer src="game.js"></script>
+  </head>
+  <body class="smash">
+    <main>
+      <header>
+        <p>Bricks smashed <strong id="score">0</strong></p>
+        <p id="detail"></p>
+      </header>
+      <div class="stage">
+        <canvas id="field" width="600" height="360" tabindex="0" aria-label="Game field" aria-describedby="instructions"></canvas>
+        <div id="prompt" hidden>
+          <p id="message" role="status"></p>
+          <button type="button" id="retry">Try again</button>
+        </div>
+      </div>
+      <div class="controls"><button type="button" data-direction="left" aria-label="Move left">←</button><button type="button" data-direction="right" aria-label="Move right">→</button><button type="button" id="action">Serve</button></div>
+      <p id="instructions">Move the shield with the arrows or drag on the court.</p>
+    </main>
+  </body>
+</html>

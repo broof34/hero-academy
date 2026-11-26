@@ -2,9 +2,9 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: "production-smoke.spec.ts",
+  testMatch: ["production-smoke.spec.ts", "arcade-v6.spec.ts"],
   workers: 1,
-  timeout: 30000,
+  timeout: 60000,
   retries: process.env.CI ? 2 : 0,
   use: {
     baseURL: process.env.HERO_TEST_URL || "http://127.0.0.1:4173/hero-academy/",

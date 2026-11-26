@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'">
+    <title>Power Merge · Hero Academy</title>
+    <link rel="stylesheet" href="../rebel/game.css">
+    <script defer src="../rebel/arcade.js"></script>
+    <script defer src="tile.js"></script>
+    <script defer src="grid.js"></script>
+    <script defer src="game-manager.js"></script>
+    <script defer src="game.js"></script>
+  </head>
+  <body class="merge">
+    <main>
+      <header>
+        <p>Merge score <strong id="score">0</strong></p>
+        <p id="detail" role="status"></p>
+      </header>
+      <div class="stage">
+        <div id="board" role="grid" aria-label="Power tile board" tabindex="0"></div>
+        <div id="prompt" hidden>
+          <p id="message" role="status"></p>
+          <button type="button" id="retry">Try again</button>
+        </div>
+      </div>
+      <div class="controls"><button type="button" data-direction="up" aria-label="Move up">↑</button><button type="button" data-direction="left" aria-label="Move left">←</button><button type="button" data-direction="down" aria-label="Move down">↓</button><button type="button" data-direction="right" aria-label="Move right">→</button></div>
+      <p id="instructions">Swipe or use the arrows. Join two of the same number.</p>
+    </main>
+  </body>
+</html>

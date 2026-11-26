@@ -1,4 +1,4 @@
-# Hero Academy V4.2 · Project REBEL
+# Hero Academy V6 · Project REBEL
 
 A first-grade learning adventure with short missions, encouraging retries, effort rewards, an original comic-book superhero interface, and an earned arcade. React + Vite + TypeScript + plain CSS. No backend, account, subscription, advertising, or analytics.
 
@@ -54,7 +54,8 @@ Reused MIT SchoolWordList's three-success mastery/revision logic and Brightleap'
 - Homework: configurable focus and break timers, pause/resume, adult confirmation and effort rewards.
 - Arcade: **Super Kart 3D**, imported from Feco Linhares’s MIT Three.js racer: two tracks, five AI rivals, six drivers, drifting, power-ups, auto-go/steering assists, keyboard and touch controls. Starts on the Neon City circuit at 50cc with assists enabled.
 - **Galactic Patrol**, adapted from Jafnee Jesmee’s MIT Generic Space Shooter: varied enemies, waves, collision/shield systems, weapon upgrades, CC0 Kenney ship sprites, auto-fire, keyboard and touch flight.
-- Both games have real gameplay previews, a pre-launch control briefing, host pause/mute controls, expanded play, voluntary exit, a countdown, and automatic unloading. Pause **does not stop the ticket deadline**. Switching browser tabs pauses gameplay until you resume.
+- **Rooftop Rush** is a one-button rooftop runner. **Power Smash** is a brick breaker with a wide shield and three balls per round. **Hero Flight** is a one-touch sky-gate challenge. **Power Merge** is an untimed tile puzzle with a first goal of 64.
+- All six games have real gameplay previews, a control briefing, pause and mute, expanded play, voluntary exit, a countdown, and automatic unloading. The four V6 games support keyboard, mouse and touch, and rounds can be retried during the same paid session. The ticket deadline keeps running through retries, pauses and reloads. Switching browser tabs pauses gameplay until you resume.
 - “Switch to 2D” loads a lightweight classic fallback **inside the same paid session**, preserving its deadline. Star Defender and Cosmic Rally remain as these fallback adapters. 3D needs WebGL; fallback games work without it.
 - Original generated masked-hero city key art, geometric SVG mission illustrations, large answer buttons, calm learning screens, responsive layouts, optional local-device read aloud.
 

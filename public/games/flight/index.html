@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'">
+    <title>Hero Flight · Hero Academy</title>
+    <link rel="stylesheet" href="../rebel/game.css">
+    <script defer src="../rebel/arcade.js"></script>
+    <script defer src="../rebel/draw.js"></script>
+    <script defer src="game.js"></script>
+  </head>
+  <body class="flight">
+    <main>
+      <header>
+        <p>Gates cleared <strong id="score">0</strong></p>
+        <p id="detail"></p>
+      </header>
+      <div class="stage">
+        <canvas id="field" width="600" height="360" tabindex="0" aria-label="Game field" aria-describedby="instructions"></canvas>
+        <div id="prompt" hidden>
+          <p id="message" role="status"></p>
+          <button type="button" id="retry">Try again</button>
+        </div>
+      </div>
+      <div class="controls"><button type="button" id="action">Boost</button></div>
+      <p id="instructions">Tap Boost or press Space. Aim for the gaps.</p>
+    </main>
+  </body>
+</html>

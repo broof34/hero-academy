@@ -30,6 +30,7 @@ import {
   startSession,
   type State,
   type Subject,
+  gameIds,
   type GameId,
 } from "./model";
 import { makeQuestion, type Question } from "./learning";
@@ -445,7 +446,7 @@ export default function App() {
                     </p>
                   )}
                   <div className="game-cards arcade-grid">
-                    {(Object.keys(games) as GameId[]).map((g) => (
+                    {gameIds.map((g) => (
                       <article className="game-card" data-game={g} key={g}>
                         <GamePreview game={g} />
                         <div className="arcade-card-content">

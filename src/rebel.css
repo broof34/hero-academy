@@ -363,7 +363,12 @@
 }
 #main-content [data-game="space"] { --game-ink: var(--rebel-cyan); }
 #main-content [data-game="racer"] { --game-ink: var(--rebel-red); }
-#main-content .game-card[data-game="space"] { margin-top: clamp(14px, 3vw, 36px); }
+#main-content [data-game="rooftop"] { --game-ink: var(--rebel-pink); }
+#main-content [data-game="smash"] { --game-ink: #ffab6c; }
+#main-content [data-game="flight"] { --game-ink: var(--rebel-lime); }
+#main-content [data-game="merge"] { --game-ink: var(--rebel-yellow); }
+#main-content [data-game="merge"] .game-preview { object-fit: contain; background: var(--rebel-inset); }
+#main-content .game-card:nth-child(even) { margin-top: clamp(14px, 3vw, 36px); }
 #main-content .arcade-card-content {
   background: var(--rebel-surface);
   border-top: 6px solid var(--game-ink);
@@ -647,7 +652,7 @@
 @media (max-width: 760px) {
   #main-content .arcade-grid,
   .learn-menu { grid-template-columns: 1fr; }
-  #main-content .game-card[data-game="space"] { margin-top: 0; }
+  #main-content .game-card:nth-child(even) { margin-top: 0; }
   .learn-menu { row-gap: 17px; }
   .learn-menu > .page-title { margin-bottom: 0; }
   .learn-menu .subject-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }

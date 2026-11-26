@@ -1,7 +1,8 @@
 import type { WeeklyData } from "./spelling/types";
 import { hydrateWeekly } from "./spelling/data";
 export type Subject = "math" | "spelling" | "reading";
-export type GameId = "space" | "racer";
+export const gameIds = ["racer", "space", "rooftop", "smash", "flight", "merge"] as const;
+export type GameId = (typeof gameIds)[number];
 export type Settings = {
   subjects: Subject[];
   difficulty: 10 | 20;
@@ -252,7 +253,7 @@ export function hydrate(raw: unknown): State {
     const v = raw.session;
     if (
       !object(v) ||
-      !["space", "racer"].includes(v.game as string) ||
+      !gameIds.some((game) => game === v.game) ||
       typeof v.endsAt !== "number" ||
       !Number.isFinite(v.endsAt)
     )
