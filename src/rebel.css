@@ -351,6 +351,7 @@
 }
 #main-content :is(.arcade-wallet, .reward-vault, .launch-panel) { border-left: 6px dashed var(--rebel-yellow); }
 #main-content .briefing-copy { border-left: 5px solid var(--rebel-cyan); }
+.game-session .game-pause-overlay { background: var(--rebel-inset); }
 #main-content .reward-record { border-top: 6px solid var(--rebel-pink); }
 #main-content .record-total { background: var(--rebel-inset); border-color: var(--rebel-edge); }
 #main-content .vault-symbol { background: var(--rebel-yellow); color: var(--rebel-ink); }
