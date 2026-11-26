@@ -91,16 +91,8 @@ for (const [width, height] of [[390, 844], [768, 1024], [1280, 900]]) {
         expect(await body.evaluate((el) => el.scrollWidth <= innerWidth)).toBe(true);
 
         if (id === "merge") {
-          if (touch) {
-            await field.scrollIntoViewIfNeeded();
-            const box = (await field.boundingBox())!;
-            const cdp = await page.context().newCDPSession(page);
-            const x = box.x + box.width * .72, y = box.y + box.height * .53;
-            await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
-            await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x - 60, y }] });
-            await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-            await cdp.detach();
-          } else {
+          if (touch) await frame.getByRole("button", { name: "Move left" }).tap();
+          else {
             await field.focus();
             await page.keyboard.press("ArrowLeft");
           }
@@ -114,13 +106,13 @@ for (const [width, height] of [[390, 844], [768, 1024], [1280, 900]]) {
             }
           });
           await expect(retry).toBeVisible();
-          if (touch) {
-            await retry.scrollIntoViewIfNeeded();
-            // The CDP swipe and the synchronous round above finish within one gesture window.
-            // Allow Chromium to finish processing that gesture before tapping in the opaque frame.
-            await page.waitForTimeout(650);
-            await retry.tap();
-          } else await retry.press("Enter");
+          // The result overlay must receive the pointer above any highlighted tile.
+          await expect.poll(() => retry.evaluate((button) => {
+            const box = button.getBoundingClientRect();
+            return document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2) === button;
+          })).toBe(true);
+          if (touch) await retry.tap();
+          else await retry.press("Enter");
           await expect(points).toHaveText("0");
           await expect(frame.getByRole("gridcell", { name: "2, Spark" })).toHaveCount(2);
         } else {
@@ -248,4 +240,29 @@ test("new arcade effects follow the session mute and pause controls", async ({ p
   await expect.poll(gain).toBeCloseTo(.45);
   await page.getByRole("button", { name: "Pause game", exact: true }).click();
   await expect.poll(gain).toBe(0);
+});
+
+
+test.describe("Power Merge swipe", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+
+  test("a touch swipe slides and combines the matching tiles", async ({ page }) => {
+    await openArcade(page);
+    const frame = await launch(page, "Power Merge");
+    const board = frame.getByRole("grid");
+    await board.scrollIntoViewIfNeeded();
+    const box = (await board.boundingBox())!;
+    const x = box.x + box.width * .72;
+    const y = box.y + box.height * .53;
+    const input = await page.context().newCDPSession(page);
+    try {
+      await input.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+      await input.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x - 60, y }] });
+      await input.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      await expect(frame.locator("#score")).toHaveText("4");
+      await expect(frame.getByRole("gridcell", { name: "4, Bolt" })).toHaveCount(1);
+    } finally {
+      await input.detach();
+    }
+  });
 });
