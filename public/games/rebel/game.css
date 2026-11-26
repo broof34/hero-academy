@@ -34,7 +34,7 @@ header {
 }
 p { margin: 0; }
 header strong { color: var(--accent); padding-left: .3em; }
-.stage { position: relative; }
+.stage { position: relative; isolation: isolate; }
 canvas {
   display: block;
   width: 100%;
@@ -63,6 +63,7 @@ button:disabled { opacity: .65; cursor: default; }
 #instructions { text-align: center; font-size: .875rem; }
 #prompt {
   position: absolute;
+  z-index: 1;
   inset: 0;
   display: flex;
   flex-direction: column;
@@ -110,7 +111,7 @@ button:disabled { opacity: .65; cursor: default; }
 .tile[data-value="16"] { --tile: #fb80c9; }
 .tile[data-value="32"] { --tile: #ffab6c; }
 .tile[data-value="64"] { --tile: #f4dc46; }
-.tile[data-value].combined { outline: 2px solid var(--paper); z-index: 1; }
+.tile[data-value].combined { outline: 2px solid var(--paper); }
 body:not(.reduced):not(.paused) .tile.combined { animation: combine 180ms cubic-bezier(.2,.65,.3,1); }
 @keyframes combine { from { transform: scale(.84); } }
 @media (prefers-reduced-motion: reduce) { .tile.combined { animation: none !important; } }
