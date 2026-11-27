@@ -31,6 +31,7 @@ import {
   type State,
   type Subject,
   gameIds,
+  isGameEnabled,
   type GameId,
 } from "./model";
 import { makeQuestion, type Question } from "./learning";
@@ -446,29 +447,31 @@ export default function App() {
                     </p>
                   )}
                   <div className="game-cards arcade-grid">
-                    {gameIds.map((g) => (
-                      <article className="game-card" data-game={g} key={g}>
-                        <GamePreview game={g} />
-                        <div className="arcade-card-content">
-                          <p className="eyebrow">{games[g].tag}</p>
-                          <h2>{games[g].title}</h2>
-                          <p>{games[g].description}</p>
-                          <div className="button-row">
-                            <span>
-                              <Ticket size={17} /> 1 ticket ·{" "}
-                              {state.settings.gameMinutes} min
-                            </span>
-                            <button
-                              className="primary"
-                              aria-label={`Play ${games[g].title}`}
-                              onClick={() => play(g)}
-                            >
-                              <Gamepad2 size={18} /> Play
-                            </button>
+                    {gameIds
+                      .filter((g) => isGameEnabled(state.settings, g))
+                      .map((g) => (
+                        <article className="game-card" data-game={g} key={g}>
+                          <GamePreview game={g} />
+                          <div className="arcade-card-content">
+                            <p className="eyebrow">{games[g].tag}</p>
+                            <h2>{games[g].title}</h2>
+                            <p>{games[g].description}</p>
+                            <div className="button-row">
+                              <span>
+                                <Ticket size={17} /> 1 ticket ·{" "}
+                                {state.settings.gameMinutes} min
+                              </span>
+                              <button
+                                className="primary"
+                                aria-label={`Play ${games[g].title}`}
+                                onClick={() => play(g)}
+                              >
+                                <Gamepad2 size={18} /> Play
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      </article>
-                    ))}
+                        </article>
+                      ))}
                   </div>
                   <section className="tip-strip">
                     <ShieldCheck />

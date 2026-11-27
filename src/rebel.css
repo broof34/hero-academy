@@ -368,6 +368,7 @@
 #main-content [data-game="flight"] { --game-ink: var(--rebel-lime); }
 #main-content [data-game="merge"] { --game-ink: var(--rebel-yellow); }
 #main-content [data-game="moto"] { --game-ink: #ffab6c; }
+#main-content [data-game="huggers"] { --game-ink: #a1eb90; }
 #main-content [data-game="merge"] .game-preview { object-fit: contain; background: var(--rebel-inset); }
 #main-content .game-card:nth-child(even) { margin-top: clamp(14px, 3vw, 36px); }
 #main-content .arcade-card-content {
@@ -702,10 +703,47 @@
 }
 .reduced-motion .app-shell :is(.primary, .secondary, .continue-button, .subject-tile):not(:disabled):active { translate: none; }
 
-/* Keep the original bottom ride controls inside the host's clipped viewport. */
-.game-session[data-game="moto"] :is(.game-viewport, iframe) {
+/* Keep the original bottom controls inside the host's clipped viewport. */
+.game-session[data-game="moto"] :is(.game-viewport, iframe),
+.game-session[data-game="huggers"]:not(.expanded) :is(.game-viewport, iframe) {
   min-height: min(430px, 90dvh);
 }
-.game-session.expanded[data-game="moto"] iframe {
+.game-session.expanded[data-game="moto"] iframe,
+.game-session.expanded[data-game="huggers"] iframe {
   min-height: 0;
+}
+
+.huggers-control-guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  padding: 0;
+  list-style: none;
+}
+.huggers-control-guide li {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .65rem;
+  border: 1px solid currentColor;
+  color: var(--game-ink);
+  font-weight: 700;
+}
+.huggers-control-guide svg { width: 1.15rem; height: 1.15rem; }
+.adult-arcade-options {
+  margin: .8rem 0;
+  border: 1px solid currentColor;
+  min-width: 0;
+}
+.adult-arcade-options legend { padding: 0 .35rem; font-weight: 700; }
+
+@media (max-height: 500px) {
+  .game-session.expanded[data-game="huggers"] {
+    padding: 6px 10px;
+    gap: 4px;
+  }
+  .game-session.expanded[data-game="huggers"] .session-head { margin-bottom: 4px; }
+  .game-session.expanded[data-game="huggers"] :is(.session-head .eyebrow, .session-footer .fine-print) { display: none; }
+  .game-session.expanded[data-game="huggers"] .session-footer { gap: 14px; }
+  .game-session.expanded[data-game="huggers"] .session-footer .text-button { padding-block: 4px; }
 }

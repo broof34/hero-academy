@@ -114,4 +114,24 @@ export const games: Record<GameId, GameDefinition> = {
     ],
     touch: "Tap the first course to start. Hold GAS to ride and BRAKE to slow down. Use the two lean arrows to land on both wheels. Tap the screen after a crash to retry.",
   },
+  huggers: {
+    title: "Space Huggers",
+    description:
+      "Jump through alien outposts, blast through walls, and clear each planet to fly to the next.",
+    path: "games/space-huggers/index.html",
+    preview: "art/space-huggers-gameplay.webp",
+    tag: "PIXEL ACTION",
+    brief: "Before you drop in",
+    features: ["Destructible worlds", "New planets each run"],
+    controls: [
+      { key: "← ↓ → / A S D", action: "Move, crouch or climb down" },
+      { key: "↑ / W", action: "Jump or climb up" },
+      { key: "Z / LEFT CLICK", action: "Fire" },
+      { key: "X / MIDDLE CLICK", action: "Roll" },
+      { key: "C / RIGHT CLICK", action: "Throw a grenade" },
+      { key: "R", action: "Restart your run" },
+    ],
+    touch:
+      "Hold an arrow to move and tap Jump with your other thumb. Try Fire first. Roll to dodge or toss a Grenade to break through a wall.",
+  },
 };

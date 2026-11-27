@@ -8,7 +8,7 @@ import {
   remainingSeconds,
 } from "../src/model";
 it("registers upgraded games under the legacy identifiers", () => {
-  expect(Object.keys(games)).toEqual(["racer", "space", "rooftop", "smash", "flight", "merge", "moto"]);
+  expect(Object.keys(games)).toEqual(["racer", "space", "rooftop", "smash", "flight", "merge", "moto", "huggers"]);
   expect(games.racer).toMatchObject({
     title: "Super Kart 3D",
     path: "games/kart/index.html",
@@ -52,7 +52,7 @@ it("preserves complete V1 saves including either active game deadline", () => {
   }
 });
 it("restores new paid games without spending again", () => {
-  for (const game of ["rooftop", "smash", "flight", "merge", "moto"] as const) {
+  for (const game of ["rooftop", "smash", "flight", "merge", "moto", "huggers"] as const) {
     const state = startSession({ ...freshState(), tickets: 3 }, game, 1000);
     const restored = hydrate(JSON.parse(JSON.stringify(state)));
     expect(restored.session).toEqual({ game, endsAt: 181000 });
@@ -69,4 +69,12 @@ it("ships local preview and game entry files for all registered games", () => {
     expect(html).not.toMatch(/src=["']https?:/);
     expect(html).toContain("Content-Security-Policy");
   }
+});
+
+it("lets grown-ups disable Space Huggers without spending a ticket", () => {
+  const restored = hydrate({ version: 1, tickets: 1, settings: { spaceHuggersEnabled: false } });
+  expect(restored.settings.spaceHuggersEnabled).toBe(false);
+  expect(restored.settings.spaceHuggersBlood).toBe(false);
+  expect(startSession(restored, "huggers")).toBe(restored);
+  expect(startSession(restored, "space", 1000).tickets).toBe(0);
 });

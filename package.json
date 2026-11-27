@@ -13,7 +13,7 @@
     "test:production": "playwright test --config playwright.production.config.ts",
     "check:build": "node scripts/check-build.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "build:games": "node scripts/build-games.mjs && node scripts/build-space.mjs && node scripts/build-moto.mjs"
+    "build:games": "node scripts/build-games.mjs && node scripts/build-space.mjs && node scripts/build-moto.mjs && python3 public/games/space-huggers/make-source.py"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

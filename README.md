@@ -56,7 +56,8 @@ Reused MIT SchoolWordList's three-success mastery/revision logic and Brightleap'
 - **Galactic Patrol**, adapted from Jafnee Jesmee’s MIT Generic Space Shooter: varied enemies, waves, collision/shield systems, weapon upgrades, CC0 Kenney ship sprites, auto-fire, keyboard and touch flight.
 - **Rooftop Rush** is a one-button rooftop runner. **Power Smash** is a brick breaker with a wide shield and three balls per round. **Hero Flight** is a one-touch sky-gate challenge. **Power Merge** is an untimed tile puzzle with a first goal of 64.
 - **Moto Rush X3** imports the original 16-course motorcycle trials campaign, its menus, physics, artwork, and sound effects. Throttle, brake and lean with keyboard or multitouch. Checkpoints and retries use the active ticket. Course records and unlocks are stored separately on this browser.
-- All seven games have real gameplay previews, a control briefing, pause and mute, expanded play, voluntary exit, a countdown, and automatic unloading. The four V6 games support keyboard, mouse and touch, and rounds can be retried during the same paid session. The ticket deadline keeps running through retries, pauses and reloads. Switching browser tabs pauses gameplay until you resume.
+- **Space Huggers** imports Frank Force’s original pixel-art platform shooter, with destructible terrain, procedurally generated planets, grenades, native sound effects and multi-touch controls. Press R or tap Restart to start a new run on the same ticket. The Grown-ups panel can hide the game and can opt in to the original blood effects. The game includes pixel guns, explosions and character deaths. The briefing and session link to the GPL notice and matching downloadable source. Reloading starts a fresh Space Huggers run under the same paid deadline. [Desktop](docs/screenshots/space-huggers/desktop.webp), [tablet](docs/screenshots/space-huggers/tablet.webp) and [phone](docs/screenshots/space-huggers/phone.webp) captures show actual play.
+- All eight games have real gameplay previews, a control briefing, pause and mute, expanded play, voluntary exit, a countdown, and automatic unloading. The four V6 games support keyboard, mouse and touch, and rounds can be retried during the same paid session. The ticket deadline keeps running through retries, pauses and reloads. Switching browser tabs pauses gameplay until you resume.
 - “Switch to 2D” loads a lightweight classic fallback **inside the same paid session**, preserving its deadline. Star Defender and Cosmic Rally remain as these fallback adapters. 3D needs WebGL; fallback games work without it.
 - Original generated masked-hero city key art, geometric SVG mission illustrations, large answer buttons, calm learning screens, responsive layouts, optional local-device read aloud.
 
@@ -66,8 +67,11 @@ Reused MIT SchoolWordList's three-success mastery/revision logic and Brightleap'
 npm run typecheck
 npm run lint
 npm test
+npm run build:games
 npm run build
+npm run check:build
 npm run test:e2e
+npm run test:production
 ```
 
 Browser tests use installed Google Chrome (`channel: chrome`). For CI without Chrome, install it with `npx playwright install chrome` or change the channel to an installed Playwright browser. Weekly tests additionally cover all eight modes, repeated-letter tiles, one-letter tablet practice, parent editing/actual JSON transfer, hidden assessment answers/rewards, adult-assisted reloads, mastery and review queues, old-save hydration and duplicate submission protection. Tests cover a full five-question mission, retry behavior, reload persistence, ticket spending, live game adapters, expiry/unloading, adult homework confirmation, custom prompts, export, and tablet layout. Unit tests cover reward boundaries, full V1 save compatibility with either legacy game ID, local game registration/assets, settings normalization, and every learning skill at both math levels. The new browser suite actually drives the 3D kart against five AI opponents, flies/fires the space fighter, checks pause/fallback/expiry and unchanged ticket balances, verifies there are no missing game assets or external requests, and returns to learning.

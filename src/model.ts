@@ -1,7 +1,7 @@
 import type { WeeklyData } from "./spelling/types";
 import { hydrateWeekly } from "./spelling/data";
 export type Subject = "math" | "spelling" | "reading";
-export const gameIds = ["racer", "space", "rooftop", "smash", "flight", "merge", "moto"] as const;
+export const gameIds = ["racer", "space", "rooftop", "smash", "flight", "merge", "moto", "huggers"] as const;
 export type GameId = (typeof gameIds)[number];
 export type Settings = {
   subjects: Subject[];
@@ -21,6 +21,8 @@ export type Settings = {
   autoRead: boolean;
   spokenEncouragement: boolean;
   reducedMotion: boolean;
+  spaceHuggersEnabled: boolean;
+  spaceHuggersBlood: boolean;
 };
 export type Session = { game: GameId; endsAt: number };
 export type CustomQuestion = {
@@ -77,6 +79,8 @@ export const freshState = (): State => ({
     autoRead: false,
     spokenEncouragement: false,
     reducedMotion: false,
+    spaceHuggersEnabled: true,
+    spaceHuggersBlood: false,
   },
 });
 const bounded = (n: number, min: number, max: number) =>
@@ -116,6 +120,8 @@ export function updateSettings(s: State, patch: Partial<Settings>): State {
       autoRead: v.autoRead === true,
       spokenEncouragement: v.spokenEncouragement === true,
       reducedMotion: v.reducedMotion === true,
+      spaceHuggersEnabled: v.spaceHuggersEnabled !== false,
+      spaceHuggersBlood: v.spaceHuggersBlood === true,
     },
   };
 }
@@ -164,8 +170,10 @@ export function redeemTicket(s: State): State {
     ? s
     : { ...s, stars: s.stars - s.settings.starCost, tickets: s.tickets + 1 };
 }
+export const isGameEnabled = (settings: Settings, game: GameId) =>
+  game !== "huggers" || settings.spaceHuggersEnabled;
 export function startSession(s: State, game: GameId, now = Date.now()): State {
-  return s.session || s.tickets < 1
+  return s.session || s.tickets < 1 || !isGameEnabled(s.settings, game)
     ? s
     : {
         ...s,
@@ -259,7 +267,8 @@ export function hydrate(raw: unknown): State {
       !Number.isFinite(v.endsAt)
     )
       throw new Error("Invalid arcade session.");
-    s.session = v as Session;
+    const session = v as Session;
+    if (isGameEnabled(s.settings, session.game)) s.session = session;
   }
   if (raw.weeklySpelling !== undefined)
     s.weeklySpelling = hydrateWeekly(raw.weeklySpelling);

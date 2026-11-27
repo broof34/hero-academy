@@ -13,6 +13,9 @@ import {
   Keyboard,
   Hand,
   ShieldCheck,
+  ArrowUp,
+  Crosshair,
+  MoveHorizontal,
 } from "lucide-react";
 import { games } from "./games";
 import { ReadAloud } from "./ReadAloud";
@@ -25,6 +28,7 @@ import {
   type Session,
 } from "./model";
 // Each of the 16 upstream replay tokens is capped at 87,384 characters.
+const HUGGERS_SOURCE = import.meta.env.BASE_URL + "games/space-huggers/SOURCE.html";
 const MOTO_PROGRESS_LIMIT = 1_500_000;
 
 export function GamePreview({ game }: { game: GameId }) {
@@ -90,7 +94,20 @@ export function GameBriefing({
           <h3>
             <Hand size={19} /> Tablet & touch
           </h3>
+          {id === "huggers" && (
+            <ul className="huggers-control-guide">
+              <li><MoveHorizontal aria-hidden="true" /> Move</li>
+              <li><ArrowUp aria-hidden="true" /> Jump</li>
+              <li><Crosshair aria-hidden="true" /> Fire</li>
+            </ul>
+          )}
           <p>{game.touch}</p>
+          {id === "huggers" && (
+            <p className="fine-print">
+              Cartoon combat includes pixel guns and explosions.{" "}
+              <a href={HUGGERS_SOURCE} target="_blank" rel="noreferrer">Source &amp; license</a>
+            </p>
+          )}
         </section>
         <section className="panel launch-panel">
           <Ticket size={40} />
@@ -166,6 +183,7 @@ export function GameSession({
     reducedMotion,
     effectsVolume: gameEffects ? settings.effectsVolume : 0,
     musicVolume: settings.musicSound ? settings.musicVolume : 0,
+    spaceHuggersBlood: settings.spaceHuggersBlood,
   });
   settingsRef.current = {
     paused,
@@ -173,6 +191,7 @@ export function GameSession({
     reducedMotion,
     effectsVolume: gameEffects ? settings.effectsVolume : 0,
     musicVolume: settings.musicSound ? settings.musicVolume : 0,
+    spaceHuggersBlood: settings.spaceHuggersBlood,
   };
   const send = (initializeMoto = false) => {
     let initialProgress: { motoProgress?: string | null } = {};
@@ -240,6 +259,7 @@ export function GameSession({
     settings.effectsVolume,
     settings.musicSound,
     settings.musicVolume,
+    settings.spaceHuggersBlood,
   ]);
   useEffect(() => {
     const hide = () => {
@@ -322,6 +342,7 @@ export function GameSession({
               (fallback ? game.fallbackPath : game.path)
             }
             sandbox="allow-scripts"
+            allow={session.game === "huggers" ? "gamepad *" : undefined}
             referrerPolicy="no-referrer"
             onLoad={() => send(session.game === "moto")}
           />
@@ -360,6 +381,11 @@ export function GameSession({
           >
             Switch to 2D
           </button>
+        )}
+        {session.game === "huggers" && (
+          <a className="text-button" href={HUGGERS_SOURCE} target="_blank" rel="noreferrer">
+            Source &amp; license
+          </a>
         )}
         <button className="text-button" onClick={onEnd}>
           <ArrowLeft size={16} /> Return to learning

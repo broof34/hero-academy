@@ -229,6 +229,35 @@ export function Parent({
             />
             Reduce decorative motion
           </label>
+          <fieldset className="adult-arcade-options">
+            <legend>Space Huggers</legend>
+            <p className="fine-print" id="huggers-age-note">
+              Pixel characters use guns and grenades. Characters can die in combat.
+              Blood is off by default.
+            </p>
+            <label className="check-label">
+              <input
+                type="checkbox"
+                checked={settings.spaceHuggersEnabled}
+                aria-describedby="huggers-age-note"
+                onChange={(e) =>
+                  setSettings({ ...settings, spaceHuggersEnabled: e.target.checked })
+                }
+              />
+              Allow Space Huggers
+            </label>
+            <label className="check-label">
+              <input
+                type="checkbox"
+                checked={settings.spaceHuggersBlood}
+                disabled={!settings.spaceHuggersEnabled}
+                onChange={(e) =>
+                  setSettings({ ...settings, spaceHuggersBlood: e.target.checked })
+                }
+              />
+              Show original blood effects
+            </label>
+          </fieldset>
           <button
             className="primary"
             onClick={() => {
@@ -240,6 +269,8 @@ export function Parent({
                 focusMinutes,
                 breakMinutes,
                 reducedMotion,
+                spaceHuggersEnabled,
+                spaceHuggersBlood,
               } = settings;
               change((s) =>
                 updateSettings(s, {
@@ -250,6 +281,8 @@ export function Parent({
                   focusMinutes,
                   breakMinutes,
                   reducedMotion,
+                  spaceHuggersEnabled,
+                  spaceHuggersBlood,
                 }),
               );
               onDone();

@@ -84,3 +84,11 @@ production suite on the built artifact and public Pages URL. See
 `docs/design-workflow.md` for the project’s Taste, UI/UX Pro Max and Design Motion
 Principles adaptations and licensing notes. Lucide supplies standard control
 icons. CSS and SVG cover the print and motion treatment.
+
+### Imported games with their own visual identity
+
+Space Huggers uses the Academy poster frame with a real gameplay crop and
+three illustrated touch actions in the briefing. Keep the licensed artwork
+inside its playfield, with directional controls on one side and the primary
+actions on the other in landscape. Use visible labels and held-state feedback
+for touch, and place content and source links in the surrounding Arcade UI.

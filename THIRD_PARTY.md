@@ -211,3 +211,34 @@ ships at `public/games/moto/LICENSE.txt`.
   license, [elma-web](https://github.com/spryt/elma-web) explicitly excludes
   bundled art, levels and audio from its MIT code license, and
   [X-Moto](https://github.com/xmoto/xmoto) is a native desktop project.
+
+## Space Huggers
+
+[Space Huggers by Frank Force](https://github.com/KilledByAPixel/SpaceHuggers/tree/c31a5aaa116842bed4b7385921eaef54dea9681d)
+is pinned at `c31a5aaa116842bed4b7385921eaef54dea9681d`, where the
+upstream README explicitly grants redistribution and modification under
+GNU GPL version 3. Copyright © 2021 Frank Force. The GPL notice covers the
+project's plain JavaScript engine and game, original pixel artwork, procedural
+environments, atlas, favicon and reference screenshot. The arcade preview is
+a real capture from the adapted build. Text uses browser and system fonts.
+
+- **Embedded dependencies.** [Tiny Canvas](https://github.com/bitnenfer/tiny-canvas/tree/97bd9ceec968fbcc6ded85a923eb6e5f7ca47c76)
+  is credited in the upstream drawing source and uses WTFPL v2.
+  [ZzFX v1.1.8](https://github.com/KilledByAPixel/ZzFX/tree/ac5a4727a44e5506a12f7340087e0b889cfd69dc)
+  is Frank Force's MIT-licensed sound synthesis.
+  The bundled, unused music routine comes from [ZzFXM](https://github.com/keithclark/ZzFXM/tree/cb07fa9ca36aefd67a0c8c656d2958b62f8ed9fe)
+  by Keith Clark and Frank Force, also MIT. No recordings, music files,
+  additional fonts or artwork packs were added to the game.
+- **Integration.** The iframe loads local, editable scripts without imports
+  from the Academy. The two independent programs communicate through the
+  arcade's generic playback and settings messages. Hero Academy added a
+  responsive playfield and simultaneous touch inputs, restart, lifecycle and
+  audio handling, a compact camera, optional original blood effects and a
+  reduced-motion treatment. Original simulation, art, weapons and sound
+  design remain in the game. Grown-ups can hide it from the Arcade.
+- **Source distribution.** The Arcade briefing and session link to
+  `games/space-huggers/SOURCE.html`, with the unchanged GPL text, embedded
+  dependency notices and a no-charge corresponding-source ZIP. The ZIP
+  contains the exact editable scripts and assets served, dated modifications,
+  run instructions and a reproducible archive generator. Python 3 is needed
+  only to use the documented local server or regenerate the ZIP.
